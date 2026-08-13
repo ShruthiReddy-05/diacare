@@ -1,0 +1,362 @@
+{
+  "id": "initial_assessment",
+  "version": "2.0.0",
+  "status": "active",
+  "title": {
+    "en": "Initial Diabetes Activity Assessment",
+    "ta": "ஆரம்ப நீரிழிவு செயல்பாடு மதிப்பீடு"
+  },
+  "modules": [
+    {
+      "id": "mod_onboarding",
+      "title": { "en": "Onboarding", "ta": "அறிமுகம்" },
+      "questions": [
+        {
+          "id": "shall_we_begin",
+          "prompt": {
+            "en": "Vanakkam! I am your DiaFit coach. I can help you manage your diabetes through simple lifestyle changes. This assessment takes around 5-7 minutes. Would you like to begin?",
+            "ta": "வணக்கம்! நான் உங்கள் டயாஃபிட் (DiaFit) பயிற்சியாளர். எளிய வாழ்க்கை முறை மாற்றங்கள் மூலம் உங்கள் நீரிழிவு நோயை நிர்வகிக்க நான் உங்களுக்கு உதவ முடியும். இந்த மதிப்பீடு சுமார் 5-7 நிமிடங்கள் ஆகும். நாம் தொடங்கலாமா?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod_basic_profile",
+      "title": { "en": "Basic Profile", "ta": "அடிப்படை விவரக்குறிப்பு" },
+      "questions": [
+        {
+          "id": "age",
+          "prompt": {
+            "en": "How old are you?",
+            "ta": "உங்கள் வயது என்ன?"
+          }
+        },
+        {
+          "id": "gender",
+          "prompt": {
+            "en": "What is your gender?",
+            "ta": "உங்கள் பாலினம் என்ன?"
+          }
+        },
+        {
+          "id": "height_weight",
+          "prompt": {
+            "en": "Please enter your height and weight. This helps us calculate your Body Mass Index (BMI).",
+            "ta": "உங்கள் உயரம் மற்றும் எடையை உள்ளிடவும். இது உங்கள் உடல் நிறை குறியீட்டை (BMI) கணக்கிட உதவுகிறது."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod_diabetes_profile",
+      "title": { "en": "Diabetes Profile", "ta": "நீரிழிவு நோய் விவரக்குறிப்பு" },
+      "questions": [
+        {
+          "id": "duration",
+          "prompt": {
+            "en": "How long have you had diabetes (in years)?",
+            "ta": "உங்களுக்கு நீரிழிவு நோய் ஏற்பட்டு எத்தனை ஆண்டுகள் ஆகிறது?"
+          }
+        },
+        {
+          "id": "knows_hba1c",
+          "prompt": {
+            "en": "Do you know your latest HbA1c reading?",
+            "ta": "உங்களின் சமீபத்திய HbA1c அளவு உங்களுக்குத் தெரியுமா?"
+          }
+        },
+        {
+          "id": "hba1c",
+          "prompt": {
+            "en": "Please enter your last HbA1c reading (%):",
+            "ta": "உங்கள் கடைசி HbA1c அளவை (%) உள்ளிடவும்:"
+          }
+        },
+        {
+          "id": "knows_fasting",
+          "prompt": {
+            "en": "Do you know your latest Fasting Blood Sugar reading?",
+            "ta": "உங்களின் சமீபத்திய வெற்று வயிற்று இரத்த சர்க்கரை அளவு உங்களுக்குத் தெரியுமா?"
+          }
+        },
+        {
+          "id": "fasting_sugar",
+          "prompt": {
+            "en": "Please enter your Fasting Blood Sugar reading (mg/dL):",
+            "ta": "உங்கள் வெற்று வயிற்று இரத்த சர்க்கரை அளவை (mg/dL) உள்ளிடவும்:"
+          }
+        },
+        {
+          "id": "medications",
+          "prompt": {
+            "en": "What diabetes medications do you take currently?",
+            "ta": "தற்போது நீங்கள் என்ன நீரிழிவு மருந்துகளை உட்கொள்கிறீர்கள்?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod_complications",
+      "title": { "en": "Complications", "ta": "உடல்நல சிக்கல்கள்" },
+      "questions": [
+        {
+          "id": "hypertension",
+          "prompt": {
+            "en": "Do you have high blood pressure (hypertension)?",
+            "ta": "உங்களுக்கு உயர் இரத்த அழுத்தம் (BP) உள்ளதா?"
+          }
+        },
+        {
+          "id": "neuropathy",
+          "prompt": {
+            "en": "Do you experience numbness, tingling, or burning sensations in your feet?",
+            "ta": "உங்கள் பாதங்களில் மரத்துப்போதல், ஊசி குத்துவது போன்ற உணர்வு அல்லது எரிச்சல் ஏற்படுகிறதா?"
+          }
+        },
+        {
+          "id": "eye_disease",
+          "prompt": {
+            "en": "Have you been diagnosed with diabetic eye disease (retinopathy)?",
+            "ta": "உங்களுக்கு நீரிழிவு கண் நோய் (ரெட்டினோபதி) இருப்பதாகக் கண்டறியப்பட்டுள்ளதா?"
+          }
+        },
+        {
+          "id": "kidney_disease",
+          "prompt": {
+            "en": "Do you have diabetic kidney disease?",
+            "ta": "உங்களுக்கு நீரிழிவு சிறுநீரக நோய் உள்ளதா?"
+          }
+        },
+        {
+          "id": "foot_wound",
+          "prompt": {
+            "en": "Do you currently have any foot wounds, sores, or ulcers?",
+            "ta": "உங்களுக்கு தற்போது பாதங்களில் காயங்கள், புண்கள் அல்லது கொப்புளங்கள் ஏதேனும் உள்ளதா?"
+          }
+        },
+        {
+          "id": "hypo_history",
+          "prompt": {
+            "en": "Have you experienced low blood sugar (hypoglycemia) during or immediately after exercise before?",
+            "ta": "இதற்கு முன்பு உடற்பயிற்சியின் போது அல்லது உடற்பயிற்சி செய்த உடனே உங்களுக்கு குறைந்த இரத்த சர்க்கரை (ஹைப்போகிளைசீமியா) ஏற்பட்டுள்ளதா?"
+          }
+        },
+        {
+          "id": "fall_history",
+          "prompt": {
+            "en": "Have you had a fall in the past year?",
+            "ta": "கடந்த ஒரு வருடத்தில் நீங்கள் கீழே விழுந்தது உண்டா?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod_physical_activity",
+      "title": { "en": "Physical Activity (IPAQ-SF)", "ta": "உடல் செயல்பாடு (IPAQ-SF)" },
+      "questions": [
+        {
+          "id": "vigorous_days",
+          "prompt": {
+            "en": "During the last 7 days, on how many <strong class=\"hi-vig\">days</strong> did you do <strong class=\"hi-vig\">vigorous</strong> physical activities like heavy lifting, digging, aerobics, or fast cycling?",
+            "ta": "கடந்த 7 நாட்களில், கனமான பொருட்களை தூக்குவது, தோண்டுவது, ஏரோபிக்ஸ் அல்லது வேகமாக சைக்கிள் ஓட்டுவது போன்ற <strong class=\"hi-vig\">கடுமையான</strong> உடல் செயல்பாடுகளை எத்தனை <strong class=\"hi-vig\">நாட்கள்</strong> செய்தீர்கள்?"
+          },
+          "ttsPrompt": {
+            "en": "During the last 7 days, on how many days did you do vigorous physical activities like heavy lifting, digging, aerobics, or fast cycling?",
+            "ta": "கடந்த 7 நாட்களில், கனமான பொருட்களை தூக்குவது, தோண்டுவது, ஏரோபிக்ஸ் அல்லது வேகமாக சைக்கிள் ஓட்டுவது போன்ற கடுமையான உடல் செயல்பாடுகளை எத்தனை நாட்கள் செய்தீர்கள்?"
+          }
+        },
+        {
+          "id": "vigorous_minutes",
+          "prompt": {
+            "en": "How many <strong class=\"hi-vig\">minutes</strong> did you usually spend doing <strong class=\"hi-vig\">vigorous</strong> activities on one of those days?",
+            "ta": "அந்த நாட்களில் ஒரு நாளில் பொதுவாக எத்தனை <strong class=\"hi-vig\">நிமிடங்கள்</strong> <strong class=\"hi-vig\">கடுமையான</strong> உடல் செயல்பாடுகளில் ஈடுபட்டீர்கள்?"
+          },
+          "ttsPrompt": {
+            "en": "How many minutes did you usually spend doing vigorous physical activities on one of those days?",
+            "ta": "அந்த நாட்களில் ஒரு நாளில் பொதுவாக எத்தனை நிமிடங்கள் கடுமையான உடல் செயல்பாடுகளில் ஈடுபட்டீர்கள்?"
+          }
+        },
+        {
+          "id": "moderate_days",
+          "prompt": {
+            "en": "During the last 7 days, on how many <strong class=\"hi-mod\">days</strong> did you do <strong class=\"hi-mod\">moderate</strong> physical activities like carrying light loads, bicycling at a regular pace, or doubles tennis? Do not include walking.",
+            "ta": "கடந்த 7 நாட்களில், இலகுவான பொருட்களை சுமந்து செல்வது, சாதாரண வேகத்தில் சைக்கிள் ஓட்டுவது அல்லது இரட்டையர் டென்னிஸ் போன்ற <strong class=\"hi-mod\">மிதமான</strong> உடல் செயல்பாடுகளை எத்தனை <strong class=\"hi-mod\">நாட்கள்</strong> செய்தீர்கள்? நடைப்பயிற்சியை சேர்க்க வேண்டாம்."
+          },
+          "ttsPrompt": {
+            "en": "During the last 7 days, on how many days did you do moderate physical activities like carrying light loads, bicycling at a regular pace, or doubles tennis? Do not include walking.",
+            "ta": "கடந்த 7 நாட்களில், இலகுவான பொருட்களை சுமந்து செல்வது, சாதாரண வேகத்தில் சைக்கிள் ஓட்டுவது அல்லது இரட்டையர் டென்னிஸ் போன்ற மிதமான உடல் செயல்பாடுகளை எத்தனை நாட்கள் செய்தீர்கள்? நடைப்பயிற்சியை சேர்க்க வேண்டாம்."
+          }
+        },
+        {
+          "id": "moderate_minutes",
+          "prompt": {
+            "en": "How many <strong class=\"hi-mod\">minutes</strong> did you usually spend doing <strong class=\"hi-mod\">moderate</strong> activities on one of those days?",
+            "ta": "அந்த நாட்களில் ஒரு நாளில் பொதுவாக எத்தனை <strong class=\"hi-mod\">நிமிடங்கள்</strong> <strong class=\"hi-mod\">மிதமான</strong> உடல் செயல்பாடுகளில் ஈடுபட்டீர்கள்?"
+          },
+          "ttsPrompt": {
+            "en": "How many minutes did you usually spend doing moderate physical activities on one of those days?",
+            "ta": "அந்த நாட்களில் ஒரு நாளில் பொதுவாக எத்தனை நிமிடங்கள் மிதமான உடல் செயல்பாடுகளில் ஈடுபட்டீர்கள்?"
+          }
+        },
+        {
+          "id": "walking_days",
+          "prompt": {
+            "en": "During the last 7 days, on how many <strong class=\"hi-mod\">days</strong> did you walk for at least 10 minutes at a time? This includes walking at work and at home, walking to travel from place to place, and any other walking that you might do solely for recreation, sport, exercise, or leisure.",
+            "ta": "கடந்த 7 நாட்களில், ஒரு முறையாவது குறைந்தபட்சம் 10 நிமிடங்கள் தொடர்ந்து நடந்த <strong class=\"hi-mod\">நாட்கள்</strong> எத்தனை? இதில் வேலையில் நடப்பது, வீட்டில் நடப்பது, ஒரு இடத்திலிருந்து மற்றொரு இடத்திற்கு நடப்பது, மற்றும் பொழுதுபோக்கு, விளையாட்டு, உடற்பயிற்சி அல்லது ஓய்வு நேரத்தில் நடப்பது ஆகியவை அடங்கும்."
+          },
+          "ttsPrompt": {
+            "en": "During the last 7 days, on how many days did you walk for at least 10 minutes at a time? This includes walking at work and at home, walking to travel from place to place, and any other walking that you might do solely for recreation, sport, exercise, or leisure.",
+            "ta": "கடந்த 7 நாட்களில், ஒரு முறையாவது குறைந்தபட்சம் 10 நிமிடங்கள் தொடர்ந்து நடந்த நாட்கள் எத்தனை? இதில் வேலையில் நடப்பது, வீட்டில் நடப்பது, ஒரு இடத்திலிருந்து மற்றொரு இடத்திற்கு நடப்பது, மற்றும் பொழுதுபோக்கு, விளையாட்டு, உடற்பயிற்சி அல்லது ஓய்வு நேரத்தில் நடப்பது ஆகியவை அடங்கும்."
+          }
+        },
+        {
+          "id": "walking_minutes",
+          "prompt": {
+            "en": "How many <strong class=\"hi-mod\">minutes</strong> did you usually spend <strong class=\"hi-mod\">walking</strong> on one of those days?",
+            "ta": "அந்த நாட்களில் ஒரு நாளில் பொதுவாக எத்தனை <strong class=\"hi-mod\">நிமிடங்கள்</strong> <strong class=\"hi-mod\">நடந்தீர்கள்</strong>?"
+          },
+          "ttsPrompt": {
+            "en": "How many hours did you usually spend walking on one of those days? (in minutes)",
+            "ta": "அந்த நாட்களில் ஒரு நாளில் பொதுவாக எத்தனை மணி நேரம் நடந்தீர்கள்? (நிமிடங்களில்)"
+          }
+        },
+        {
+          "id": "sitting_hours",
+          "prompt": {
+            "en": "How many hours per day do you spend sitting? Include time spent sitting at work, at home, while doing course work or reading, sitting to watch Television during leisure time.",
+            "ta": "ஒரு நாளைக்கு எத்தனை மணி நேரம் உட்கார்ந்து செலவிடுகிறீர்கள்? வேலையில், வீட்டில், பாடம் படிக்கும்போது அல்லது படிக்கும்போது, ஓய்வு நேரத்தில் டிவி பார்க்கும்போது உட்கார்ந்த நேரம் இதில் அடங்கும்."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod_parq",
+      "title": { "en": "PAR-Q Safety", "ta": "உடற்தகுதி கேள்வித்தாள் (PAR-Q)" },
+      "questions": [
+        {
+          "id": "parq_heart",
+          "prompt": {
+            "en": "Has your doctor ever said that you have a heart condition and that you should only do physical activity recommended by a doctor?",
+            "ta": "உங்களுக்கு இதய நோய் இருப்பதாகவும், மருத்துவர் பரிந்துரைக்கும் பயிற்சிகளை மட்டுமே செய்ய வேண்டும் என்றும் எப்போதாவது மருத்துவர் கூறியிருக்கிறாரா?"
+          }
+        },
+        {
+          "id": "parq_chest_active",
+          "prompt": {
+            "en": "Do you feel pain in your chest when you do physical activity?",
+            "ta": "உடற்பயிற்சி செய்யும் போது உங்கள் நெஞ்சில் வலி ஏற்படுகிறதா?"
+          }
+        },
+        {
+          "id": "parq_chest_rest",
+          "prompt": {
+            "en": "In the past month, have you had chest pain when you were not doing physical activity?",
+            "ta": "கடந்த மாதத்தில், உடற்பயிற்சி செய்யாத போதும் உங்களுக்கு நெஞ்சு வலி ஏற்பட்டதா?"
+          }
+        },
+        {
+          "id": "parq_balance",
+          "prompt": {
+            "en": "Do you lose your balance because of dizziness or do you ever lose consciousness?",
+            "ta": "தலைச்சுற்றல் காரணமாக நீங்கள் சமநிலையை இழக்கிறீர்களா அல்லது மயக்கம் அடைந்தது உண்டா?"
+          }
+        },
+        {
+          "id": "parq_bone",
+          "prompt": {
+            "en": "Do you have a bone or joint problem that could be made worse by a change in your physical activity?",
+            "ta": "உடல் செயல்பாடுகளை மாற்றுவதால் மோசமடையக்கூடிய எலும்பு அல்லது மூட்டு பிரச்சனைகள் ஏதேனும் உங்களுக்கு உள்ளதா?"
+          }
+        },
+        {
+          "id": "parq_drugs",
+          "prompt": {
+            "en": "Is your doctor currently prescribing drugs (for example, water pills) for your blood pressure or heart condition?",
+            "ta": "உயர் இரத்த அழுத்தம் அல்லது இதய நோய்க்காக தற்போது ஏதேனும் மருந்துகளை மருத்துவர் பரிந்துரைக்கிறாரா?"
+          }
+        },
+        {
+          "id": "parq_other",
+          "prompt": {
+            "en": "Do you know of any other reason why you should not do physical activity?",
+            "ta": "நீங்கள் உடற்பயிற்சி செய்யக்கூடாது என்பதற்கு வேறு ஏதேனும் காரணம் உங்களுக்குத் தெரியுமா?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod_motivation",
+      "title": { "en": "Goals & Motivation", "ta": "இலக்குகள் & ஊக்கம்" },
+      "questions": [
+        {
+          "id": "confidence",
+          "prompt": {
+            "en": "How confident are you about exercising regularly (on a scale of 1 to 5)?",
+            "ta": "தொடர்ந்து உடற்பயிற்சி செய்வது பற்றி உங்களுக்கு எவ்வளவு நம்பிக்கை உள்ளது (1 முதல் 5 வரையிலான அளவில்)?"
+          }
+        },
+        {
+          "id": "exercise_types",
+          "prompt": {
+            "en": "What type of exercise do you enjoy the most? (You can select multiple)",
+            "ta": "நீங்கள் மிகவும் விரும்பும் உடற்பயிற்சி வகை எது? (நீங்கள் பலவற்றைத் தேர்ந்தெடுக்கலாம்)"
+          }
+        },
+        {
+          "id": "enjoyment",
+          "prompt": {
+            "en": "On a scale of 1-10, how much do you enjoy physical activity generally?",
+            "ta": "பொதுவாக உடற்பயிற்சியை நீங்கள் எவ்வளவு ரசிக்கிறீர்கள் (1-10 அளவில்)?"
+          }
+        },
+        {
+          "id": "barriers",
+          "prompt": {
+            "en": "What prevents you from exercising regularly? (You can select multiple)",
+            "ta": "தொடர்ந்து உடற்பயிற்சி செய்வதைத் தடுப்பது எது? (நீங்கள் பலவற்றைத் தேர்ந்தெடுக்கலாம்)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod_lifestyle",
+      "title": { "en": "Other Lifestyle Domains", "ta": "வாழ்க்கை முறை காரணிகள்" },
+      "questions": [
+        {
+          "id": "sleep_hours",
+          "prompt": {
+            "en": "How many hours of sleep do you usually get each night?",
+            "ta": "பொதுவாக ஒரு இரவில் நீங்கள் எத்தனை மணி நேரம் தூங்குகிறீர்கள்?"
+          }
+        },
+        {
+          "id": "stress",
+          "prompt": {
+            "en": "How stressed do you feel on a typical day?",
+            "ta": "ஒரு சாதாரண நாளில் நீங்கள் எவ்வளவு மன அழுத்தத்தை உணர்கிறீர்கள்?"
+          }
+        },
+        {
+          "id": "junk_food",
+          "prompt": {
+            "en": "How often do you consume junk food or sugary drinks per week?",
+            "ta": "வாரத்திற்கு எத்தனை முறை நீங்கள் துரித உணவுகள் (ஜங்க் புட்) அல்லது இனிப்பு பானங்களை உட்கொள்கிறீர்கள்?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod_prescription",
+      "title": { "en": "Prescription", "ta": "பரிந்துரைப்பு" },
+      "questions": [
+        {
+          "id": "view_prescription",
+          "prompt": {
+            "en": "Based on all your responses, I have prepared your personalized DiaFit physical activity plan. Are you ready to view it?",
+            "ta": "உங்கள் பதில்களின் அடிப்படையில், உங்களுக்கான தனிப்பயனாக்கப்பட்ட டயாஃபிட் உடற்பயிற்சி திட்டத்தை நான் தயாரித்துள்ளேன். அதை நீங்கள் பார்க்க தயாரா?"
+          }
+        }
+      ]
+    }
+  ]
+}
