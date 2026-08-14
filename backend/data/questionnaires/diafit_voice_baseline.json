@@ -1,0 +1,159 @@
+{
+  "id": "diafit_voice_baseline",
+  "version": "1.0.0",
+  "status": "active",
+  "title": { "en": "DiaFit Voice", "ta": "டயாஃபிட் வாய்ஸ்" },
+  "modules": [
+    {
+      "id": "A",
+      "title": { "en": "Onboarding & Consent", "ta": "அறிமுகம் மற்றும் ஒப்புதல்" },
+      "sitting": "1",
+      "questions": [
+        { "id": "welcome", "input_type": "confirmation", "save_as": "welcomeAcknowledged",
+          "prompt": { "en": "Vanakkam! I am DiaFit, your diabetes self-care coach. I can help you with food, activity, medicines, sugar monitoring and everyday problems. I am not a doctor. I will never change your medicine doses.",
+                      "ta": "வணக்கம்! நான் டயாஃபிட், உங்கள் நீரிழிவு சுய-பராமரிப்பு பயிற்சியாளர். உணவு, உடற்பயிற்சி, மருந்துகள், சர்க்கரை கண்காணிப்பு மற்றும் அன்றாட பிரச்சனைகளில் நான் உங்களுக்கு உதவ முடியும். நான் மருத்துவர் அல்ல. உங்கள் மருந்தின் அளவை நான் ஒருபோதும் மாற்ற மாட்டேன்." } },
+        { "id": "consent", "input_type": "confirmation", "save_as": "consentGiven", "required": true,
+          "options": [ { "value": "yes", "label": { "en": "Yes, I agree", "ta": "ஆம், நான் ஒப்புக்கொள்கிறேன்" } }, { "value": "no", "label": { "en": "No", "ta": "இல்லை" } } ],
+          "prompt": { "en": "I am not a doctor and I will never change your medicine doses. Do you agree to begin, understanding this and that your answers will be used to build your personal care plan?",
+                      "ta": "நான் மருத்துவர் அல்ல, உங்கள் மருந்தின் அளவை நான் ஒருபோதும் மாற்ற மாட்டேன். இதை புரிந்துகொண்டு, உங்கள் பதில்கள் உங்கள் தனிப்பட்ட பராமரிப்பு திட்டத்தை உருவாக்கப் பயன்படுத்தப்படும் என்பதை அறிந்து, தொடங்க நீங்கள் ஒப்புக்கொள்கிறீர்களா?" } },
+        { "id": "language_preference", "input_type": "single_choice", "save_as": "languagePreference", "required": true,
+          "options": [ { "value": "ta", "label": { "en": "Tamil", "ta": "தமிழ்" } }, { "value": "en", "label": { "en": "English", "ta": "ஆங்கிலம்" } } ],
+          "prompt": { "en": "Which language would you prefer - Tamil or English?", "ta": "உங்களுக்கு எந்த மொழி வேண்டும் - தமிழா அல்லது ஆங்கிலமா?" } },
+        { "id": "checkin_time_preference", "input_type": "single_choice", "save_as": "preferredCheckinTime", "required": true,
+          "options": [ { "value": "morning", "label": { "en": "Morning", "ta": "காலை" } }, { "value": "afternoon", "label": { "en": "Afternoon", "ta": "மதியம்" } }, { "value": "evening", "label": { "en": "Evening", "ta": "மாலை" } } ],
+          "prompt": { "en": "What time of day suits you best for the weekly check-in?", "ta": "வாராந்திர சரிபார்ப்புக்கு உங்களுக்கு எந்த நேரம் வசதியாக இருக்கும்?" } }
+      ]
+    },
+    {
+      "id": "B1",
+      "title": { "en": "Baseline: Basic Profile", "ta": "அடிப்படை: தனிப்பட்ட விவரம்" },
+      "sitting": "1",
+      "questions": [
+        { "id": "name", "input_type": "text", "save_as": "name", "required": true, "prompt": { "en": "What is your name?", "ta": "உங்கள் பெயர் என்ன?" } },
+        { "id": "age", "input_type": "number", "save_as": "age", "required": true, "min": 18, "max": 110, "prompt": { "en": "What is your age?", "ta": "உங்கள் வயது என்ன?" } },
+        { "id": "sex", "input_type": "single_choice", "save_as": "sex", "required": true,
+          "options": [ { "value": "male", "label": { "en": "Male", "ta": "ஆண்" } }, { "value": "female", "label": { "en": "Female", "ta": "பெண்" } } ],
+          "prompt": { "en": "What is your sex?", "ta": "உங்கள் பாலினம் என்ன?" } },
+        { "id": "height_weight", "input_type": "height_weight", "save_as": "heightCm,weightKg", "required": true,
+          "prompt": { "en": "What is your height and weight?", "ta": "உங்கள் உயரமும் எடையும் என்ன?" } },
+        { "id": "waist", "input_type": "number", "save_as": "waistCm", "required": true, "unit": "cm",
+          "prompt": { "en": "What is your waist circumference, in centimetres?", "ta": "உங்கள் இடுப்பு அளவு, சென்டிமீட்டரில் எவ்வளவு?" } },
+        { "id": "occupation", "input_type": "single_choice", "save_as": "occupationType", "required": true,
+          "options": [ { "value": "sitting", "label": { "en": "Sitting / desk work", "ta": "உட்கார்ந்து செய்யும் வேலை" } }, { "value": "standing", "label": { "en": "Standing", "ta": "நின்று செய்யும் வேலை" } }, { "value": "heavy", "label": { "en": "Heavy / manual work", "ta": "கடின உடல் உழைப்பு வேலை" } } ],
+          "prompt": { "en": "What is your occupation, and is your work mostly sitting, standing, or heavy?", "ta": "உங்கள் தொழில் என்ன, உங்கள் வேலை பெரும்பாலும் உட்கார்ந்தா, நின்றா அல்லது கடின உழைப்பா?" } }
+      ]
+    },
+    {
+      "id": "B2",
+      "title": { "en": "Baseline: Diabetes Profile", "ta": "அடிப்படை: நீரிழிவு விவரம்" },
+      "sitting": "1",
+      "questions": [
+        { "id": "duration_years", "input_type": "number", "save_as": "durationYears", "required": true,
+          "prompt": { "en": "How many years have you had diabetes?", "ta": "உங்களுக்கு எத்தனை ஆண்டுகளாக நீரிழிவு உள்ளது?" } },
+        { "id": "hba1c", "input_type": "decimal", "save_as": "hba1c", "unit": "%",
+          "prompt": { "en": "What was your last HbA1c?", "ta": "உங்கள் கடைசி HbA1c மதிப்பு என்ன?" } },
+        { "id": "fasting_sugar", "input_type": "number", "save_as": "fastingSugar", "unit": "mg/dl",
+          "prompt": { "en": "What was your last fasting sugar reading?", "ta": "உங்கள் கடைசி வெறும் வயிற்று சர்க்கரை அளவு என்ன?" } },
+        { "id": "post_meal_sugar", "input_type": "number", "save_as": "postMealSugar", "unit": "mg/dl",
+          "prompt": { "en": "What was your last post-meal sugar reading?", "ta": "உணவுக்குப் பிறகான உங்கள் கடைசி சர்க்கரை அளவு என்ன?" } },
+        { "id": "bp", "input_type": "text", "save_as": "bpSystolic,bpDiastolic",
+          "prompt": { "en": "What was your last blood pressure reading?", "ta": "உங்கள் கடைசி இரத்த அழுத்த அளவு என்ன?" } },
+        { "id": "medications", "input_type": "text", "save_as": "medications", "required": true,
+          "prompt": { "en": "Please tell me the names and timings of all your medicines, including any siddha, ayurvedic or herbal medicine you take.", "ta": "நீங்கள் எடுத்துக் கொள்ளும் அனைத்து மருந்துகளின் பெயர்கள் மற்றும் நேரங்களை சொல்லுங்கள் - சித்த, ஆயுர்வேத அல்லது மூலிகை மருந்துகள் இருந்தாலும் சேர்த்து சொல்லுங்கள்." } },
+        { "id": "last_visit_date", "input_type": "date", "save_as": "lastVisitDate",
+          "prompt": { "en": "When did you last see your doctor?", "ta": "நீங்கள் கடைசியாக மருத்துவரை எப்போது பார்த்தீர்கள்?" } },
+        { "id": "last_eye_check_date", "input_type": "date", "save_as": "lastEyeCheckDate",
+          "prompt": { "en": "When was your last eye check?", "ta": "உங்கள் கடைசி கண் பரிசோதனை எப்போது நடந்தது?" } },
+        { "id": "last_foot_check_date", "input_type": "date", "save_as": "lastFootCheckDate",
+          "prompt": { "en": "When was your last foot check?", "ta": "உங்கள் கடைசி கால் பரிசோதனை எப்போது நடந்தது?" } },
+        { "id": "last_renal_test_date", "input_type": "date", "save_as": "lastRenalTestDate",
+          "prompt": { "en": "When was your last urine or kidney test?", "ta": "உங்கள் கடைசி சிறுநீர் அல்லது சிறுநீரக பரிசோதனை எப்போது நடந்தது?" } }
+      ]
+    },
+    {
+      "id": "B3",
+      "title": { "en": "Baseline: Risk & Complication Screening", "ta": "அடிப்படை: ஆபத்து மற்றும் சிக்கல் பரிசோதனை" },
+      "sitting": "1",
+      "questions": [
+        { "id": "numbness_tingling", "input_type": "confirmation", "save_as": "hasNumbnessTingling",
+          "prompt": { "en": "Do you have numbness, tingling or burning in your feet?", "ta": "உங்கள் கால்களில் மரத்துப்போதல், சிலிர்ப்பு அல்லது எரிச்சல் உணர்வு உள்ளதா?" } },
+        { "id": "foot_wound", "input_type": "confirmation", "save_as": "hasFootWoundOrUlcer",
+          "prompt": { "en": "Any wound, ulcer, callus or colour change on your feet?", "ta": "உங்கள் கால்களில் காயம், புண், தடிப்பு அல்லது நிற மாற்றம் ஏதேனும் உள்ளதா?" } },
+        { "id": "eye_disease", "input_type": "confirmation", "save_as": "hasEyeDiseaseOrLaser",
+          "prompt": { "en": "Have you been told you have eye disease, or had laser treatment?", "ta": "உங்களுக்கு கண் நோய் இருப்பதாகவோ, லேசர் சிகிச்சை பெற்றதாகவோ மருத்துவர் சொன்னதுண்டா?" } },
+        { "id": "kidney_disease", "input_type": "confirmation", "save_as": "hasKidneyDiseaseOrSwelling",
+          "prompt": { "en": "Do you have kidney disease, swelling of feet, or reduced urine?", "ta": "உங்களுக்கு சிறுநீரக நோய், கால் வீக்கம் அல்லது சிறுநீர் அளவு குறைவு உள்ளதா?" } },
+        { "id": "heart_condition", "input_type": "confirmation", "save_as": "hasHeartCondition",
+          "prompt": { "en": "Has your doctor ever said that you have a heart condition?", "ta": "உங்களுக்கு இதய நோய் இருப்பதாக மருத்துவர் எப்போதாவது சொன்னதுண்டா?" } },
+        { "id": "tobacco", "input_type": "confirmation", "save_as": "usesTobacco",
+          "prompt": { "en": "Do you use tobacco in any form?", "ta": "நீங்கள் எந்த வடிவத்திலும் புகையிலை பயன்படுத்துகிறீர்களா?" } },
+        { "id": "alcohol", "input_type": "confirmation", "save_as": "drinksAlcohol",
+          "prompt": { "en": "Do you drink alcohol?", "ta": "நீங்கள் மது அருந்துவீர்களா?" } }
+      ]
+    },
+    {
+      "id": "M1",
+      "title": { "en": "Healthy Eating", "ta": "ஆரோக்கியமான உணவு" },
+      "sitting": "2",
+      "questions": [
+        { "id": "meals_per_day", "input_type": "number", "save_as": "mealsPerDay", "prompt": { "en": "How many meals do you eat in a day?", "ta": "நீங்கள் ஒரு நாளில் எத்தனை வேளை உணவு சாப்பிடுவீர்கள்?" } },
+        { "id": "skips_meals", "input_type": "confirmation", "save_as": "skipsMeals", "prompt": { "en": "Do you skip any meals?", "ta": "நீங்கள் எந்த வேளை உணவையும் தவிர்ப்பதுண்டா?" } },
+        { "id": "rice_cups", "input_type": "decimal", "save_as": "riceCupsPerMeal", "prompt": { "en": "How many cups of rice do you take at one meal?", "ta": "ஒரு வேளையில் எத்தனை கப் சாதம் சாப்பிடுவீர்கள்?" } },
+        { "id": "millets", "input_type": "confirmation", "save_as": "eatsMilletsWholeWheat", "prompt": { "en": "Do you eat millets or whole wheat?", "ta": "நீங்கள் சிறுதானியங்கள் அல்லது கோதுமை உணவுகள் சாப்பிடுவீர்களா?" } },
+        { "id": "fried_sweets", "input_type": "number", "save_as": "friedSweetFrequencyPerWeek", "prompt": { "en": "How often do you eat fried snacks, sweets or bakery items in a week?", "ta": "வாரத்திற்கு எத்தனை முறை வறுத்த பலகாரங்கள், இனிப்புகள் அல்லது பேக்கரி பொருட்கள் சாப்பிடுவீர்கள்?" } },
+        { "id": "vegetables", "input_type": "number", "save_as": "vegetablePortionsPerDay", "prompt": { "en": "How many portions of vegetables do you eat in a day?", "ta": "ஒரு நாளில் எத்தனை பங்கு காய்கறிகள் சாப்பிடுவீர்கள்?" } },
+        { "id": "extra_salt", "input_type": "confirmation", "save_as": "addsExtraSalt", "prompt": { "en": "Do you add extra salt at the table?", "ta": "சாப்பிடும்போது கூடுதலாக உப்பு சேர்ப்பீர்களா?" } },
+        { "id": "pickles_packaged", "input_type": "confirmation", "save_as": "eatsPicklesOrPackagedSnacksOften", "prompt": { "en": "Do you eat pickles or packaged snacks most days?", "ta": "பெரும்பாலான நாட்களில் ஊறுகாய் அல்லது பொதி செய்யப்பட்ட தின்பண்டங்கள் சாப்பிடுவீர்களா?" } }
+      ]
+    },
+    {
+      "id": "M2",
+      "title": { "en": "Being Active", "ta": "உடல் செயல்பாடு" },
+      "sitting": "2",
+      "questions": [
+        { "id": "activity_days", "input_type": "number", "save_as": "activityDaysPerWeek", "prompt": { "en": "On how many days in a week do you do 20-30 minutes of walking or any other physical activity?", "ta": "வாரத்தில் எத்தனை நாட்கள் 20-30 நிமிடங்கள் நடைப்பயிற்சி அல்லது வேறு உடற்பயிற்சி செய்வீர்கள்?" } },
+        { "id": "strength_yoga", "input_type": "confirmation", "save_as": "doesStrengthYogaStretching", "prompt": { "en": "Do you do any strength exercise, yoga or stretching?", "ta": "நீங்கள் ஏதேனும் வலிமை பயிற்சி, யோகா அல்லது நீட்சி பயிற்சி செய்வீர்களா?" } }
+      ]
+    },
+    {
+      "id": "M3",
+      "title": { "en": "Taking Medication & Monitoring", "ta": "மருந்து உட்கொள்ளுதல் மற்றும் கண்காணிப்பு" },
+      "sitting": "3",
+      "questions": [
+        { "id": "missed_doses", "input_type": "number", "save_as": "dosesMissedLast7Days", "prompt": { "en": "In the last seven days, how many times did you miss a dose?", "ta": "கடந்த ஏழு நாட்களில், எத்தனை முறை மருந்து தவறவிட்டீர்கள்?" } },
+        { "id": "missed_dose_reason", "input_type": "text", "save_as": "missedDoseReason", "prompt": { "en": "What is the main reason you missed a dose?", "ta": "மருந்து தவறவிட்டதற்கான முக்கிய காரணம் என்ன?" } },
+        { "id": "sugar_check_frequency", "input_type": "text", "save_as": "sugarCheckFrequency", "prompt": { "en": "How often do you check your sugar?", "ta": "எவ்வளவு அடிக்கடி உங்கள் சர்க்கரை அளவைச் சோதிப்பீர்கள்?" } },
+        { "id": "target_knowledge", "input_type": "confirmation", "save_as": "targetKnowledgeCorrect", "prompt": { "en": "What should your target blood glucose numbers be?", "ta": "உங்கள் இலக்கு இரத்த சர்க்கரை அளவு என்னவாக இருக்க வேண்டும்?" } }
+      ]
+    },
+    {
+      "id": "M4",
+      "title": { "en": "Healthy Coping & Problem Solving", "ta": "ஆரோக்கியமான சமாளிப்பு மற்றும் தீர்வு காணுதல்" },
+      "sitting": "3",
+      "questions": [
+        { "id": "hypo_symptoms", "input_type": "confirmation", "save_as": "hasHypoSymptoms", "prompt": { "en": "Have you had episodes of shaking, sweating, giddiness or sudden hunger?", "ta": "உங்களுக்கு நடுக்கம், வியர்வை, தலைச்சுற்றல் அல்லது திடீர் பசி ஏற்பட்டதுண்டா?" } },
+        { "id": "sleep_hours", "input_type": "decimal", "save_as": "sleepHours", "prompt": { "en": "How many hours do you sleep at night?", "ta": "இரவில் எத்தனை மணி நேரம் தூங்குவீர்கள்?" } },
+        { "id": "snores_loudly", "input_type": "confirmation", "save_as": "snoresLoudly", "prompt": { "en": "Do you snore loudly or feel sleepy during the day?", "ta": "நீங்கள் உரக்க குறட்டை விடுவீர்களா அல்லது பகலில் தூக்கம் வருமா?" } },
+        { "id": "daytime_sleepy", "input_type": "confirmation", "save_as": "daytimeSleepy", "prompt": { "en": "Do you feel sleepy during the day?", "ta": "பகல் நேரத்தில் தூக்கம் கவ்வுமா?" } },
+        { "id": "mood_low_interest", "input_type": "confirmation", "save_as": "feltLowOrLostInterest", "prompt": { "en": "In the last two weeks, have you often felt low, or lost interest in things?", "ta": "கடந்த இரண்டு வாரங்களில், அடிக்கடி மனம் தளர்ச்சியாக இருந்ததா அல்லது எதிலும் ஆர்வம் இல்லாமல் இருந்ததா?" } },
+        { "id": "mood_worried_guilty", "input_type": "confirmation", "save_as": "feltWorriedGuiltyTired", "prompt": { "en": "Do you feel worried, guilty or tired of managing your diabetes?", "ta": "உங்கள் நீரிழிவை நிர்வகிப்பதில் கவலையாகவோ, குற்ற உணர்வுடனோ அல்லது சோர்வாகவோ உணர்கிறீர்களா?" } }
+      ]
+    },
+    {
+      "id": "C",
+      "title": { "en": "Weekly Check-In", "ta": "வாராந்திர சரிபார்ப்பு" },
+      "sitting": "weekly",
+      "questions": [
+        { "id": "checkin_activity_days", "input_type": "number", "save_as": "q1_activity_days", "prompt": { "en": "On how many days last week did you walk or do physical activity?", "ta": "கடந்த வாரம் எத்தனை நாட்கள் நடைப்பயிற்சி அல்லது உடற்பயிற்சி செய்தீர்கள்?" } },
+        { "id": "checkin_food_goal_days", "input_type": "number", "save_as": "q2_food_goal_days", "prompt": { "en": "On how many days did you manage your two food goals?", "ta": "எத்தனை நாட்கள் உங்கள் இரண்டு உணவு இலக்குகளை பின்பற்றினீர்கள்?" } },
+        { "id": "checkin_medication_days", "input_type": "number", "save_as": "q3_medication_days", "prompt": { "en": "On how many of the last seven days did you take your recommended diabetes medication?", "ta": "கடந்த ஏழு நாட்களில் எத்தனை நாட்கள் பரிந்துரைக்கப்பட்ட நீரிழிவு மருந்தை எடுத்துக்கொண்டீர்கள்?" } },
+        { "id": "checkin_foot_care_days", "input_type": "number", "save_as": "q4_foot_care_days", "prompt": { "en": "On how many of the last seven days did you care for your feet?", "ta": "கடந்த ஏழு நாட்களில் எத்தனை நாட்கள் உங்கள் கால்களை பராமரித்தீர்கள்?" } },
+        { "id": "checkin_new_foot_problem", "input_type": "confirmation", "save_as": "q5_new_foot_problem", "prompt": { "en": "Any new foot problem, wound or pain?", "ta": "புதிதாக கால் பிரச்சனை, காயம் அல்லது வலி ஏதேனும் உள்ளதா?" } },
+        { "id": "checkin_stress", "input_type": "scale", "save_as": "q6_stress_0_10", "min": 0, "max": 10, "prompt": { "en": "On a scale of 0 to 10, how was your stress this week?", "ta": "0 முதல் 10 வரையிலான அளவில், இந்த வாரம் உங்கள் மன அழுத்தம் எப்படி இருந்தது?" } },
+        { "id": "checkin_sleep", "input_type": "scale", "save_as": "q7_sleep_0_10", "min": 0, "max": 10, "prompt": { "en": "On a scale of 0 to 10, how well did you sleep this week?", "ta": "0 முதல் 10 வரையிலான அளவில், இந்த வாரம் உங்கள் தூக்கம் எப்படி இருந்தது?" } },
+        { "id": "checkin_sugar", "input_type": "number", "save_as": "q8_sugar_reading", "prompt": { "en": "What was your last sugar reading this week?", "ta": "இந்த வாரம் உங்கள் கடைசி சர்க்கரை அளவு என்ன?" } },
+        { "id": "checkin_hypo_episode", "input_type": "confirmation", "save_as": "q8b_hypo_episode", "prompt": { "en": "Any low-sugar episodes this week?", "ta": "இந்த வாரம் குறைந்த சர்க்கரை அளவு ஏற்பட்டதுண்டா?" } }
+      ]
+    }
+  ]
+}

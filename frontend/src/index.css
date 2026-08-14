@@ -1340,6 +1340,119 @@ body,
   animation: spin 1s linear infinite;
 }
 
+.careplan-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.careplan-disclaimer {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.careplan-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.careplan-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.careplan-note {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.careplan-warning {
+  font-size: 13px;
+  color: var(--error);
+  line-height: 1.5;
+  background: rgba(239, 68, 68, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+.careplan-table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.careplan-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.careplan-table-row:last-child {
+  border-bottom: none;
+}
+
+.careplan-table-what {
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.careplan-table-value {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.careplan-table-target {
+  color: var(--text-muted);
+}
+
+.careplan-goal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.careplan-goal-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.careplan-escalation {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.careplan-escalation .careplan-section-title {
+  color: var(--error);
+}
+
 .prescription-card {
   background: var(--bg-card);
   border: 1px solid var(--border);

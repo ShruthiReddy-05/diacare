@@ -3,7 +3,7 @@ import logging
 from base64 import urlsafe_b64decode
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from models.follow_up import NotificationSubscription, NotificationEvent
+from models.notification import NotificationSubscription, NotificationEvent
 from config import settings
 from utils import ist_now
 

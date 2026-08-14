@@ -1,11 +1,11 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUserStore } from '../../stores/useUserStore';
 import { translations } from '../../data/translations';
-import { Home, ClipboardList, BarChart3, Settings } from 'lucide-react';
+import { Home, Shield, BarChart3, Settings } from 'lucide-react';
 
 const navItems = [
   { path: '/home', icon: Home, labelKey: 'home' as const },
-  { path: '/assessment', icon: ClipboardList, labelKey: 'assessment' as const },
+  { path: '/check-in', icon: Shield, labelKey: 'followUp' as const },
   { path: '/history', icon: BarChart3, labelKey: 'history' as const },
   { path: '/settings', icon: Settings, labelKey: 'settings' as const },
 ];

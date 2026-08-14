@@ -5,12 +5,12 @@ import LoadingSpinner from './components/common/LoadingSpinner'
 import FirstLandingPage from './components/registration/FirstLandingPage'
 import RecoverProfilePage from './components/registration/RecoverProfilePage'
 import Home from './pages/Home'
-import Assessment from './pages/Assessment'
-import Prescription from './pages/Prescription'
+import Conversation from './pages/Conversation'
+import CarePlan from './pages/CarePlan'
 import History from './pages/History'
 import SugarTracking from './pages/SugarTracking'
 import ActivityProgress from './pages/ActivityProgress'
-import FollowUp from './pages/FollowUp'
+import CheckIn from './pages/CheckIn'
 import Settings from './pages/Settings'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
@@ -41,12 +41,12 @@ function App() {
         <Route path="/" element={isRegistered ? <Navigate to="/home" /> : <FirstLandingPage />} />
         <Route path="/recover" element={<RecoverProfilePage />} />
         <Route path="/home" element={isRegistered ? <Home /> : <Navigate to="/" />} />
-        <Route path="/assessment" element={isRegistered ? <Assessment /> : <Navigate to="/" />} />
-        <Route path="/prescription/:id" element={isRegistered ? <Prescription /> : <Navigate to="/" />} />
+        <Route path="/conversation/:sitting" element={isRegistered ? <Conversation /> : <Navigate to="/" />} />
+        <Route path="/care-plan/:id" element={isRegistered ? <CarePlan /> : <Navigate to="/" />} />
         <Route path="/history" element={isRegistered ? <History /> : <Navigate to="/" />} />
         <Route path="/sugar" element={isRegistered ? <SugarTracking /> : <Navigate to="/" />} />
         <Route path="/activity" element={isRegistered ? <ActivityProgress /> : <Navigate to="/" />} />
-        <Route path="/follow-up" element={isRegistered ? <FollowUp /> : <Navigate to="/" />} />
+        <Route path="/check-in" element={isRegistered ? <CheckIn /> : <Navigate to="/" />} />
         <Route path="/settings" element={isRegistered ? <Settings /> : <Navigate to="/" />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />

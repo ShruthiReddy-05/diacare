@@ -4,8 +4,8 @@ from sqlalchemy.future import select
 from typing import List
 
 from database import get_db
-from models.follow_up import NotificationSubscription, NotificationEvent
-from schemas.follow_up import (
+from models.notification import NotificationSubscription, NotificationEvent
+from schemas.notification import (
     NotificationSubscriptionCreate, NotificationSubscriptionResponse,
 )
 from config import settings

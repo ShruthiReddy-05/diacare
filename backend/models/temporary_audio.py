@@ -8,7 +8,7 @@ class TemporaryAudio(Base):
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    prescription_id = Column(String(36), ForeignKey("prescriptions.id", ondelete="CASCADE"), nullable=False)
+    care_plan_id = Column(String(36), ForeignKey("care_plans.id", ondelete="CASCADE"), nullable=False)
     content_hash = Column(String(64), nullable=False, index=True)
     language = Column(String(10), nullable=False)
     provider = Column(String(50), nullable=False)

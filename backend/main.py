@@ -11,8 +11,8 @@ from config import settings
 from utils import ist_now
 import models
 
-from routers import users, assessments, prescriptions, sugar_and_activity, audio, admin, follow_ups, notifications, reminders, scheduler, adherence, speech
-from routers.prescriptions import temp_audio_router
+from routers import users, conversation, care_plan, sugar_and_activity, audio, admin, checkin, notifications, reminders, scheduler, adherence, speech
+from routers.care_plan import temp_audio_router
 
 logger = logging.getLogger(__name__)
 BACKUP_INTERVAL_SECS = 21600  # 6 hours
@@ -65,9 +65,9 @@ async def lifespan(app: FastAPI):
     pass
 
 app = FastAPI(
-    title="DiaFit API",
-    description="Backend API for DiaFit PWA - Diabetes Physical Activity Coaching",
-    version="2.0.0",
+    title="DiaFit Voice API",
+    description="Backend API for DiaFit Voice - Diabetes Self-Care Chatbot (ICMR 2018 / AADE7)",
+    version="1.0.0",
     lifespan=lifespan
 )
 
@@ -82,12 +82,12 @@ app.add_middleware(
 
 # Include routers
 app.include_router(users.router)
-app.include_router(assessments.router)
-app.include_router(prescriptions.router)
+app.include_router(conversation.router)
+app.include_router(care_plan.router)
 app.include_router(sugar_and_activity.router)
 app.include_router(audio.router)
 app.include_router(admin.router)
-app.include_router(follow_ups.router)
+app.include_router(checkin.router)
 app.include_router(notifications.router)
 app.include_router(reminders.router)
 app.include_router(scheduler.router)
@@ -98,7 +98,7 @@ app.include_router(temp_audio_router)
 @app.get("/")
 async def root():
     return {
-        "app": "DiaFit API",
-        "version": "2.0.0",
+        "app": "DiaFit Voice API",
+        "version": "1.0.0",
         "status": "healthy"
     }

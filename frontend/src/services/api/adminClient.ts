@@ -1,3 +1,4 @@
+const API_BASE = import.meta.env.VITE_API_URL || "";
 const ADMIN_TOKEN_KEY = 'df_admin_token';
 
 function getToken(): string | null {
@@ -24,7 +25,7 @@ async function adminRequest<T>(url: string, options?: RequestInit): Promise<T> {
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const response = await fetch(url, { ...options, headers });
+  const response = await fetch(`${API_BASE}${url}`, { ...options, headers });
   if (response.status === 401) {
     clearToken();
     throw new Error('Unauthorized');
@@ -36,90 +37,19 @@ async function adminRequest<T>(url: string, options?: RequestInit): Promise<T> {
   return response.json();
 }
 
-export interface ComprehensiveMetrics {
-  userOverview: {
-    totalUsers: number;
-    activeToday: number;
-    activeThisWeek: number;
-    activeThisMonth: number;
-    languageDistribution: { language: string; count: number }[];
-    avgLoginStreakWeeks: number;
-    maxLoginStreakWeeks: number;
-    avgAdherenceStreakWeeks: number;
-    maxAdherenceStreakWeeks: number;
-    perUserLoginStreaks: { displayUserId: string; name: string; streakWeeks: number }[];
-    perUserAdherenceStreaks: { displayUserId: string; name: string; streakWeeks: number }[];
-  };
-  assessments: {
-    totalSessions: number;
-    completed: number;
-    abandoned: number;
-    inProgress: number;
-    firstAssessmentCompletionRate: number;
-    avgCompletionTimeMinutes: number;
-    perUserSessions: { userId: string; displayUserId: string; name: string; count: number }[];
-    dropOffByQuestion: { questionId: string; moduleId: string; responseCount: number; funnelPercent: number; dropFromFirst: number }[];
-  };
-  followUps: {
-    totalSessions: number;
-    due: number;
-    completed: number;
-    missed: number;
-    overdue: number;
-    completionRate: number;
-    perUserSessions: { displayUserId: string; name: string; total: number; due: number; completed: number }[];
-  };
-  prescriptions: {
-    planDistribution: { planType: string; count: number }[];
-    glycemicRisk: { category: string; count: number }[];
-    physicalActivityRisk: { category: string; count: number }[];
-    sedentaryRisk: { category: string; count: number }[];
-    overallRisk: { category: string; count: number }[];
-    bmiDistribution: { category: string; count: number }[];
-    parQClearanceRequired: number;
-    complicationFlags: { totalUsersWithFlags: number; breakdown: Record<string, number> };
-  };
-  activity: {
-    avgMinutesCompleted: number;
-    avgDaysCompleted: number;
-    strengthAdherence: { totalLogs: number; completedSessions: number; rate: number };
-    exerciseAdherenceRate: number;
-    avgPrescribedMinutesPerWeek: number;
-    avgCompletedVsPrescribed: { prescribedMinutes: number; completedMinutes: number };
-  };
-  sugarReadings: {
-    totalEntries: number;
-    fastingCount: number;
-    postMealCount: number;
-    hba1cCount: number;
-    usersWithRecentHba1c: number;
-  };
-  sugarDistributions: {
-    fasting: { below100: number; range100_125: number; above126: number };
-    postMeal: { below140: number; range140_199: number; above200: number };
-  };
-  notifications: {
-    reminderOptInRate: number;
-    totalUsersWithReminders: number;
-    pushSent: number;
-    pushDelivered: number;
-    pushOpened: number;
-    pushActionCompleted: number;
-  };
-  safety: {
-    activitySafetyFlags: number;
-    followUpSafetyFlags: number;
-    escalationAdviceCount: number;
-  };
-  weeklyAdherence: {
-    weekStart: string;
-    userId: string;
-    displayUserId: string;
-    name: string;
-    exerciseAdherent: boolean;
-    loginStreakWeeks: number;
-    adherenceStreakWeeks: number;
-  }[];
+export interface OverviewMetrics {
+  totalUsers: number;
+  activeToday: number;
+  activeThisWeek: number;
+  baselineCompleted: number;
+  conversationSessionsCompleted: number;
+  conversationSessionsInProgress: number;
+  riskTierDistribution: { tier: string; count: number }[];
+  checkinsCompleted: number;
+  checkinsMissed: number;
+  checkinsEscalated: number;
+  openSafetyEvents: number;
+  reassessmentsTriggered: number;
 }
 
 export interface HealthInfo {
@@ -127,8 +57,53 @@ export interface HealthInfo {
   timestamp: string;
   responseTimeMs: number;
   db: string;
-  uptime: number | null;
   cacheEntries: number;
+}
+
+export interface ExportResponseRow {
+  displayUserId: string;
+  firstName: string;
+  lastName: string;
+  sitting: string;
+  moduleId: string;
+  questionId: string;
+  questionTextEn: string | null;
+  answerValue: string;
+  language: string;
+  inputModality: string;
+  answeredAt: string | null;
+}
+
+export interface ExportCheckinRow {
+  displayUserId: string;
+  firstName: string;
+  lastName: string;
+  programWeek: number;
+  dueDate: string | null;
+  status: string;
+  activityDays: number | null;
+  foodGoalDays: number | null;
+  medicationDays: number | null;
+  footCareDays: number | null;
+  newFootProblem: boolean | null;
+  stress0to10: number | null;
+  sleep0to10: number | null;
+  sugarReading: number | null;
+  hypoEpisode: boolean | null;
+  safetyFlag: boolean;
+  completedAt: string | null;
+}
+
+export interface AdminUserRow {
+  id: string;
+  displayUserId: string;
+  firstName: string;
+  lastName: string;
+  preferredLanguage: string;
+  role: string;
+  createdAt: string;
+  riskTier: string;
+  checkinsDue: number;
 }
 
 export function exportToCsv(data: Record<string, any>[], filename: string) {
@@ -158,19 +133,8 @@ export const adminApi = {
       body: JSON.stringify({ username, password }),
     }),
 
-  getMetrics: () =>
-    adminRequest<{
-      totalUsers: number;
-      activeUsers: number;
-      totalAssessments: number;
-      completedAssessments: number;
-      completionRate: number;
-      averageActivityMinutes: number;
-      safetyFlagsTriggered: number;
-    }>('/api/admin/metrics/overview'),
-
-  getComprehensiveMetrics: (days: number = 30) =>
-    adminRequest<ComprehensiveMetrics>(`/api/admin/metrics/comprehensive?days=${days}`),
+  getOverviewMetrics: (forceRefresh = false) =>
+    adminRequest<OverviewMetrics>(`/api/admin/metrics/overview${forceRefresh ? '?force_refresh=true' : ''}`),
 
   getUsers: (params?: { search?: string; page?: number; limit?: number }) => {
     const q = new URLSearchParams();
@@ -179,18 +143,7 @@ export const adminApi = {
     if (params?.limit) q.set('limit', String(params.limit));
     const qs = q.toString();
     return adminRequest<{
-      users: Array<{
-        id: string;
-        displayUserId: string;
-        firstName: string;
-        lastName: string;
-        preferredLanguage: string;
-        role: string;
-        createdAt: string;
-        assessmentsCount: number;
-        currentPlan: string;
-        followUpsDue: number;
-      }>;
+      users: AdminUserRow[];
       total: number;
       page: number;
       limit: number;
@@ -201,10 +154,10 @@ export const adminApi = {
   getUserDetail: (userId: string) =>
     adminRequest<{
       user: any;
-      assessments: any[];
-      prescriptions: any[];
-      sugarReadings: any[];
-      activityLogs: any[];
+      baselineProfile: any;
+      carePlans: any[];
+      checkinSessions: any[];
+      safetyEvents: any[];
     }>(`/api/admin/users/${userId}/detail`),
 
   getMissingAudio: () =>
@@ -218,7 +171,7 @@ export const adminApi = {
       body: JSON.stringify(body || {}),
     }),
 
-  broadcastNotification: (type: 'follow_up' | 'exercise_reminder' | 'sugar_test') =>
+  broadcastNotification: (type: 'checkin' | 'medication_reminder' | 'sugar_test') =>
     adminRequest<{ type: string; totalUsersWithSubscriptions: number; sent: number; failed: number }>(
       '/api/admin/notifications/broadcast', {
         method: 'POST',
@@ -230,6 +183,12 @@ export const adminApi = {
 
   getHealth: () =>
     adminRequest<HealthInfo>('/api/admin/health'),
+
+  exportResponses: () =>
+    adminRequest<ExportResponseRow[]>('/api/admin/export/responses'),
+
+  exportCheckins: () =>
+    adminRequest<ExportCheckinRow[]>('/api/admin/export/checkins'),
 
   cleanupTemporaryAudio: () =>
     adminRequest<{ deleted: number; message: string }>('/api/admin/temporary-audio/cleanup', {

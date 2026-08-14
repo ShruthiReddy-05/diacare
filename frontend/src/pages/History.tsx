@@ -16,15 +16,9 @@ function stripHtml(html: string): string {
 
 function formatAnswer(r: any): string {
   if (r.question_id === 'height_weight' && typeof r.answer_value === 'string') {
-    // Stored as "170cm,70kg" or "[object Object]" (legacy)
-    if (r.answer_value.includes('cm') && r.answer_value.includes('kg')) {
-      const parts = r.answer_value.replace('cm', '').replace('kg', '').split(',');
-      if (parts.length >= 2) {
-        return `Height: ${parts[0].trim()} cm, Weight: ${parts[1].trim()} kg`;
-      }
-    }
-    if (r.answer_value === '[object Object]') {
-      return 'Height / Weight recorded';
+    const parts = r.answer_value.replace(/cm|kg/g, '').split(',');
+    if (parts.length >= 2 && parts[0].trim() && parts[1].trim()) {
+      return `Height: ${parts[0].trim()} cm, Weight: ${parts[1].trim()} kg`;
     }
   }
   return r.answer_value;
@@ -40,7 +34,7 @@ export default function History() {
 
   useEffect(() => {
     if (!user) { navigate('/'); return; }
-    api.getUserAssessments(user.id).then((data) => {
+    api.getUserConversationSessions(user.id).then((data) => {
       setSessions(data || []);
     }).catch(() => {}).finally(() => setLoading(false));
   }, [user]);

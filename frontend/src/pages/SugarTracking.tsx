@@ -15,17 +15,17 @@ const READING_TYPES = ['fasting', 'post_meal', 'hba1c'] as const;
 
 function extractBaseline(sessions: any[]): BaselineValue[] {
   const completed = sessions.filter((s: any) => s.status === 'completed');
-  if (completed.length === 0) return [];
-  const latest = completed[completed.length - 1];
   const result: BaselineValue[] = [];
-  for (const r of latest.responses || []) {
-    if (r.question_id === 'hba1c') {
-      const v = parseFloat(r.answer_value);
-      if (!isNaN(v)) result.push({ reading_type: 'hba1c', value: v });
-    }
-    if (r.question_id === 'fasting_sugar') {
-      const v = parseFloat(r.answer_value);
-      if (!isNaN(v)) result.push({ reading_type: 'fasting', value: v });
+  for (const session of completed) {
+    for (const r of session.responses || []) {
+      if (r.question_id === 'hba1c') {
+        const v = parseFloat(r.answer_value);
+        if (!isNaN(v)) result.push({ reading_type: 'hba1c', value: v });
+      }
+      if (r.question_id === 'fasting_sugar') {
+        const v = parseFloat(r.answer_value);
+        if (!isNaN(v)) result.push({ reading_type: 'fasting', value: v });
+      }
     }
   }
   return result;
@@ -50,7 +50,7 @@ export default function SugarTracking() {
     if (!user) { navigate('/'); return; }
     Promise.all([
       api.getUserSugarReadings(user.id),
-      api.getUserAssessments(user.id),
+      api.getUserConversationSessions(user.id),
     ]).then(([r, sessions]) => {
       setReadings(r);
       setBaseline(extractBaseline(sessions));

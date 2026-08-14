@@ -18,16 +18,19 @@ class User(Base):
     
     recovery_events = relationship("ParticipantRecoveryEvent", back_populates="user", cascade="all, delete-orphan")
     sessions = relationship("AppSession", back_populates="user", cascade="all, delete-orphan")
-    assessment_sessions = relationship("AssessmentSession", back_populates="user", cascade="all, delete-orphan")
-    prescriptions = relationship("Prescription", back_populates="user", cascade="all, delete-orphan")
+    conversation_sessions = relationship("ConversationSession", back_populates="user", cascade="all, delete-orphan")
+    baseline_profile = relationship("BaselineProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    module_outcomes = relationship("ModuleOutcome", back_populates="user", cascade="all, delete-orphan")
+    care_plans = relationship("CarePlan", back_populates="user", cascade="all, delete-orphan")
+    checkin_schedule = relationship("CheckInSchedule", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    checkin_sessions = relationship("CheckInSession", back_populates="user", cascade="all, delete-orphan")
+    weekly_domain_metrics = relationship("WeeklyDomainMetric", back_populates="user", cascade="all, delete-orphan")
+    safety_events = relationship("SafetyEvent", back_populates="user", cascade="all, delete-orphan")
     sugar_readings = relationship("SugarReading", back_populates="user", cascade="all, delete-orphan")
     activity_logs = relationship("ActivityLog", back_populates="user", cascade="all, delete-orphan")
-    follow_up_schedules = relationship("FollowUpSchedule", back_populates="user", cascade="all, delete-orphan")
-    follow_up_sessions = relationship("FollowUpSession", back_populates="user", cascade="all, delete-orphan")
     notification_subscriptions = relationship("NotificationSubscription", back_populates="user", cascade="all, delete-orphan")
     notification_events = relationship("NotificationEvent", back_populates="user", cascade="all, delete-orphan")
     reminders = relationship("Reminder", back_populates="user", cascade="all, delete-orphan")
-    weekly_metrics = relationship("WeeklyUserMetric", back_populates="user", cascade="all, delete-orphan")
 
 class ParticipantRecoveryEvent(Base):
     __tablename__ = "participant_recovery_events"

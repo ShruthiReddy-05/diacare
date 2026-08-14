@@ -4,6 +4,12 @@ import NumberInput from './NumberInput';
 import ScaleInput from './ScaleInput';
 import TextInput from './TextInput';
 import HeightWeightInput from './HeightWeightInput';
+import DateInput from './DateInput';
+
+const DEFAULT_YES_NO = [
+  { value: 'yes', label: { en: 'Yes', ta: 'ஆம்' } },
+  { value: 'no', label: { en: 'No', ta: 'இல்லை' } },
+];
 
 interface Props {
   question: QuestionDefinition;
@@ -20,7 +26,7 @@ export default function QuestionInput({ question, value, onChange, language, sel
     case 'confirmation':
       return (
         <OptionButtons
-          options={question.options || []}
+          options={question.options || (question.inputType === 'confirmation' ? DEFAULT_YES_NO : [])}
           selected={value}
           onSelect={(optValue) => {
             onChange(optValue);
@@ -95,6 +101,15 @@ export default function QuestionInput({ question, value, onChange, language, sel
 
     case 'height_weight':
       return <HeightWeightInput onChange={onChange} onSubmit={() => onSubmit?.()} />;
+
+    case 'date':
+      return (
+        <DateInput
+          value={value}
+          onChange={onChange}
+          onSubmit={() => onSubmit?.()}
+        />
+      );
 
     default:
       return null;

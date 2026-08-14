@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVoiceCoachStore } from '../../stores/useVoiceCoachStore';
-import { useAssessmentStore } from '../../stores/useAssessmentStore';
+import { useConversationStore } from '../../stores/useConversationStore';
 import { useUserStore } from '../../stores/useUserStore';
 import { translations } from '../../data/translations';
-import { initialAssessmentQuestionnaire } from '../../data/questionnaires/initialAssessment';
+import { findQuestion } from '../../domain/conversationEngine';
 import { useSpeech } from '../../services/speech/SpeechContext';
 import VoiceFlowIndicator from './VoiceFlowIndicator';
 import { Mic, Headphones, X, Check, RotateCcw } from 'lucide-react';
@@ -15,16 +15,15 @@ interface Props {
 
 export default function VoiceCoachPanel({ onVoiceAnswer }: Props) {
   const { flowState, isEnabled, transcript, displayText, disable, setFlowState } = useVoiceCoachStore();
-  const { currentQuestionId } = useAssessmentStore();
+  const { currentQuestionId, script } = useConversationStore();
   const { language } = useUserStore();
   const t = translations[language];
   const { startListening, stopListening, stop } = useSpeech();
 
   const currentQuestion = useMemo(() => {
-    if (!currentQuestionId) return null;
-    const allQ = initialAssessmentQuestionnaire.modules.flatMap(m => m.questions);
-    return allQ.find(q => q.id === currentQuestionId) || null;
-  }, [currentQuestionId]);
+    if (!currentQuestionId || !script) return null;
+    return findQuestion(currentQuestionId, script) || null;
+  }, [currentQuestionId, script]);
 
   if (!isEnabled) return null;
 

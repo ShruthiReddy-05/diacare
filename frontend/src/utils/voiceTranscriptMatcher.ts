@@ -69,7 +69,10 @@ export function matchVoiceTranscript(
   const trimmed = transcript.trim();
   if (!trimmed) return transcript;
 
-  const { inputType, options } = question;
+  const { inputType } = question;
+  const options = question.options || (inputType === 'confirmation'
+    ? [{ value: 'yes', label: { en: 'Yes', ta: 'ஆம்' } }, { value: 'no', label: { en: 'No', ta: 'இல்லை' } }]
+    : undefined);
 
   if (inputType === 'single_choice' || inputType === 'confirmation') {
     if (!options) return trimmed;

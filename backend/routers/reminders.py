@@ -4,8 +4,8 @@ from sqlalchemy.future import select
 from typing import List
 
 from database import get_db
-from models.follow_up import Reminder
-from schemas.follow_up import ReminderCreate, ReminderResponse
+from models.notification import Reminder
+from schemas.notification import ReminderCreate, ReminderResponse
 
 router = APIRouter(prefix="/api/reminders", tags=["Reminders"])
 
@@ -32,6 +32,8 @@ async def update_reminder(
         raise HTTPException(status_code=404, detail="Reminder not found.")
 
     reminder.type = body.type
+    reminder.label = body.label
+    reminder.time_of_day = body.time_of_day
     reminder.days_of_week = body.days_of_week
     reminder.interval_days = body.interval_days
     reminder.is_enabled = body.is_enabled
@@ -48,6 +50,8 @@ async def create_reminder(
     reminder = Reminder(
         user_id=user_id,
         type=body.type,
+        label=body.label,
+        time_of_day=body.time_of_day,
         days_of_week=body.days_of_week,
         interval_days=body.interval_days,
         is_enabled=body.is_enabled,
