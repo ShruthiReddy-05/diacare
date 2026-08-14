@@ -11,7 +11,7 @@ export default defineConfig({
       srcDir: 'public',
       filename: 'sw.js',
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'icons/icon.svg'],
+      includeAssets: ['favicon.ico', 'robots.txt'],
       manifest: {
         name: 'DiaFit Diabetes Activity Coach',
         short_name: 'DiaFit',
@@ -23,9 +23,14 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: '/icons/icon.svg',
-            type: 'image/svg+xml',
-            sizes: 'any'
+            src: '/icons/icon-192.png',
+            type: 'image/png',
+            sizes: '192x192'
+          },
+          {
+            src: '/icons/icon-512.png',
+            type: 'image/png',
+            sizes: '512x512'
           }
         ]
       }
