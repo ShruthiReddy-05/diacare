@@ -1,0 +1,16 @@
+name: Daily Check-In Tick
+
+# Module C (the 12-week weekly check-in) and the medication/movement
+# reminders are only materialized when POST /api/scheduler/daily-tick runs.
+# Render's free tier has no built-in cron, so this workflow is that cron.
+on:
+  schedule:
+    - cron: '0 6 * * *'  # 06:00 UTC = 11:30 IST, safely after the 05:00 IST due-time in checkin_scheduler.py
+  workflow_dispatch: {}
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger backend daily tick
+        run: curl -sf -X POST https://diafit-backend.onrender.com/api/scheduler/daily-tick
