@@ -7,26 +7,26 @@
 }
 
 :root {
-  --primary: #2C6E49;
-  --primary-light: #4A9D6E;
-  --primary-dark: #1B4D33;
-  --primary-glow: rgba(44, 110, 73, 0.3);
-  --accent: #F59E0B;
-  --accent-light: #FBBF24;
-  --accent-glow: rgba(245, 158, 11, 0.3);
+  --primary: #5B9BD5;
+  --primary-light: #A7C7E7;
+  --primary-dark: #3D6D99;
+  --primary-glow: rgba(91, 155, 213, 0.28);
+  --accent: #E8A868;
+  --accent-light: #F3C98B;
+  --accent-glow: rgba(232, 168, 104, 0.25);
 
-  --bg-primary: #0A0E1A;
-  --bg-secondary: #111827;
-  --bg-card: rgba(255, 255, 255, 0.04);
-  --bg-card-hover: rgba(255, 255, 255, 0.08);
-  --bg-input: rgba(255, 255, 255, 0.06);
+  --bg-primary: #EAF3FB;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F3F8FD;
+  --bg-input: #F5F9FC;
 
-  --text-primary: #F3F4F6;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
+  --text-primary: #1E293B;
+  --text-secondary: #52708C;
+  --text-muted: #8FA6BE;
 
-  --border: rgba(255, 255, 255, 0.08);
-  --border-active: rgba(255, 255, 255, 0.15);
+  --border: rgba(91, 155, 213, 0.2);
+  --border-active: rgba(91, 155, 213, 0.4);
 
   --error: #EF4444;
   --success: #10B981;
@@ -39,7 +39,7 @@
   --radius-xl: 20px;
   --radius-full: 9999px;
 
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 4px 20px rgba(91, 155, 213, 0.15);
   --shadow-glow: 0 0 20px var(--primary-glow);
 
   --safe-top: env(safe-area-inset-top, 0px);
@@ -60,21 +60,21 @@
 }
 
 [data-theme="light"] {
-  --bg-primary: #FAF9F5;
-  --bg-secondary: #ffffffb0;
-  --bg-card: rgba(0, 0, 0, 0.05);
-  --bg-card-hover: rgba(0, 0, 0, 0.09);
-  --bg-input: rgba(0, 0, 0, 0.05);
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F7FBFE;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #EEF6FC;
+  --bg-input: #F3F8FC;
 
-  --text-primary: #1F2937;
-  --text-secondary: #6B7280;
-  --text-muted: #9CA3AF;
+  --text-primary: #1E293B;
+  --text-secondary: #52708C;
+  --text-muted: #93A9BF;
 
-  --border: rgba(0, 0, 0, 0.1);
-  --border-active: rgba(0, 0, 0, 0.18);
+  --border: rgba(91, 155, 213, 0.16);
+  --border-active: rgba(91, 155, 213, 0.32);
 
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
-  --shadow-glow: 0 0 20px rgba(44, 110, 73, 0.15);
+  --shadow-card: 0 4px 20px rgba(91, 155, 213, 0.1);
+  --shadow-glow: 0 0 20px rgba(91, 155, 213, 0.18);
 }
 
 [data-theme="light"] .app-bar {
@@ -244,7 +244,7 @@ body,
 }
 
 .nav-item.active {
-  color: var(--primary-light);
+  color: var(--primary-dark);
 }
 
 .nav-item:active {
@@ -305,7 +305,7 @@ body,
 }
 
 .logo-activity {
-  color: var(--primary-light);
+  color: var(--primary-dark);
   animation: pulse-activity 2s ease-in-out infinite;
 }
 
@@ -336,7 +336,7 @@ body,
 }
 
 .logo-icon {
-  color: var(--primary-light);
+  color: var(--primary-dark);
 }
 
 .app-title {
@@ -536,7 +536,7 @@ body,
 .link-btn {
   background: none;
   border: none;
-  color: var(--primary-light);
+  color: var(--primary-dark);
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -677,8 +677,8 @@ body,
 
 .option-btn.active {
   border-color: var(--primary-light);
-  background: rgba(44, 110, 73, 0.15);
-  color: var(--primary-light);
+  background: rgba(91, 155, 213, 0.15);
+  color: var(--primary-dark);
   box-shadow: 0 0 0 1px var(--primary-light);
 }
 
@@ -821,6 +821,14 @@ body,
   gap: 6px;
 }
 
+.bp-slash {
+  align-self: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0 2px;
+}
+
 /* ========== PROGRESS ========== */
 .progress-section {
   display: flex;
@@ -854,7 +862,7 @@ body,
 .progress-pct {
   font-size: 12px;
   font-weight: 600;
-  color: var(--primary-light);
+  color: var(--primary-dark);
   min-width: 32px;
   text-align: right;
 }
@@ -1331,6 +1339,26 @@ body,
   color: var(--error);
 }
 
+.careplan-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.careplan-download-btn:hover {
+  background: var(--primary-dark);
+}
+
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -1706,7 +1734,7 @@ body,
 .display-id-small {
   font-size: 14px;
   font-weight: 600;
-  color: var(--primary-light);
+  color: var(--primary-dark);
   background: var(--bg-input);
   padding: 4px 10px;
   border-radius: var(--radius-sm);
@@ -3143,4 +3171,34 @@ body,
 .admin-msg-error,
 .admin-action-btn {
   /* already defined above, kept for compatibility with old pages */
+}
+
+/* ========== PRINT (Care Plan "Download as PDF") ========== */
+@media print {
+  .app-bar,
+  .bottom-nav,
+  .careplan-no-print,
+  .voice-coach-panel,
+  .assessment-input-area,
+  .notif-topbar {
+    display: none !important;
+  }
+
+  html,
+  body,
+  #root,
+  .page-container,
+  .page-content {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  .careplan-view {
+    padding: 0;
+  }
+
+  .careplan-section {
+    break-inside: avoid;
+  }
 }

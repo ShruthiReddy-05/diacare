@@ -12,7 +12,7 @@ from services.b3_engine import (
 )
 from services.m1_engine import compute_m1
 from services.m2_engine import classify_activity_category, compute_m2
-from services.m3_engine import classify_adherence, classify_smbg_frequency
+from services.m3_engine import classify_adherence, classify_smbg_frequency, classify_target_knowledge, classify_barrier, compute_m3
 from services.m4_engine import classify_sleep_apnea_risk, evaluate_mood_screen
 from services.checkin_engine import evaluate_checkin
 from services.safety_engine import check_safety_values, check_safety
@@ -154,6 +154,33 @@ def test_m3_adherence_and_smbg():
     assert classify_smbg_frequency("insulin", False, "target") == "intensified"
     assert classify_smbg_frequency("metformin_only", False, "unsatisfactory") == "frequent"
     assert classify_smbg_frequency("metformin_only", False, "target") == "standard"
+
+
+def test_m3_target_knowledge_is_graded_not_self_reported():
+    # correct on both fasting (80-110) and post-meal (120-140)
+    assert classify_target_knowledge(100, 130) is True
+    # fasting out of range
+    assert classify_target_knowledge(150, 130) is False
+    # post-meal out of range
+    assert classify_target_knowledge(100, 200) is False
+    # missing / unanswered
+    assert classify_target_knowledge(None, None) is False
+
+    correct = compute_m3({"statedTargetFasting": 100, "statedTargetPostMeal": 130})
+    assert correct["knowledge_gap"] is False
+    wrong = compute_m3({"statedTargetFasting": 90, "statedTargetPostMeal": 220})
+    assert wrong["knowledge_gap"] is True
+
+
+def test_m3_barrier_is_a_controlled_value_not_guessed():
+    assert classify_barrier("cost") == "cost"
+    assert classify_barrier("forgetfulness") == "forgetfulness"
+    assert classify_barrier("other") == "unknown"
+    assert classify_barrier(None) == "unknown"
+
+    poor_adherence = compute_m3({"dosesMissedLast7Days": 4, "missedDoseReason": "side_effect"})
+    assert poor_adherence["rerun_barrier_assessment"] is True
+    assert poor_adherence["barrier"] == "side_effect"
 
 
 def test_m4_sleep_apnea_and_mood_screen():

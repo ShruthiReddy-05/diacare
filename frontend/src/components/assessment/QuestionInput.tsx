@@ -4,6 +4,8 @@ import NumberInput from './NumberInput';
 import ScaleInput from './ScaleInput';
 import TextInput from './TextInput';
 import HeightWeightInput from './HeightWeightInput';
+import BloodPressureInput from './BloodPressureInput';
+import BloodSugarTargetInput from './BloodSugarTargetInput';
 import DateInput from './DateInput';
 
 const DEFAULT_YES_NO = [
@@ -101,6 +103,12 @@ export default function QuestionInput({ question, value, onChange, language, sel
 
     case 'height_weight':
       return <HeightWeightInput onChange={onChange} onSubmit={() => onSubmit?.()} />;
+
+    case 'blood_pressure':
+      return <BloodPressureInput onChange={onChange} onSubmit={() => onSubmit?.()} />;
+
+    case 'blood_sugar_target':
+      return <BloodSugarTargetInput onChange={onChange} onSubmit={() => onSubmit?.()} />;
 
     case 'date':
       return (

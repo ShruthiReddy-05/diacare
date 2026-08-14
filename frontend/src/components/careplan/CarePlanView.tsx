@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import type { CarePlanSnapshot } from '../../domain/types';
 import { useUserStore } from '../../stores/useUserStore';
 import { translations } from '../../data/translations';
-import { AlertTriangle, Play, Pause, RotateCcw, Loader2, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, Play, Pause, RotateCcw, Loader2, CheckCircle2, Download } from 'lucide-react';
 import api from '../../services/api/client';
 
 interface Props {
@@ -96,7 +96,7 @@ export default function CarePlanView({ plan, riskTier, carePlanId }: Props) {
         </div>
       )}
 
-      <div className="prescription-audio-bar">
+      <div className="prescription-audio-bar careplan-no-print">
         <button className="prescription-audio-btn" onClick={handlePlayPause} disabled={loading}>
           {loading ? <Loader2 size={20} className="spin" /> : playing ? <Pause size={20} /> : <Play size={20} />}
         </button>
@@ -107,6 +107,9 @@ export default function CarePlanView({ plan, riskTier, carePlanId }: Props) {
           {loading ? 'Generating audio...' : playing ? 'Playing...' : 'Listen to plan'}
         </span>
         {error && <span className="prescription-audio-error">{error}</span>}
+        <button className="careplan-download-btn" onClick={() => window.print()} title="Download as PDF">
+          <Download size={16} /> Download PDF
+        </button>
       </div>
 
       <Section title={t.clinicalStatus}>

@@ -128,7 +128,7 @@ def build_monitoring_plan(m3_output: Dict[str, Any], baseline: Dict[str, Any]) -
             f"Doctor, it has been a while since my {', '.join(overdue_items)}. Can I have {'them' if len(overdue_items) > 1 else 'it'} done today?"
             if overdue_items else None
         ),
-        "trace": ["lastEyeCheckDate", "lastFootCheckDate", "lastRenalTestDate", "targetKnowledgeCorrect"],
+        "trace": ["lastEyeCheckDate", "lastFootCheckDate", "lastRenalTestDate", "statedTargetFasting", "statedTargetPostMeal"],
     }
 
 

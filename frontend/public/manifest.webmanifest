@@ -4,8 +4,8 @@
   "description": "Bilingual physical activity coach for managing type 2 diabetes safely.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0F172A",
-  "theme_color": "#2C6E49",
+  "background_color": "#EAF3FB",
+  "theme_color": "#5B9BD5",
   "orientation": "portrait",
   "icons": [
     {

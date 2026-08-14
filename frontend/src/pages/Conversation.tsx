@@ -17,6 +17,10 @@ import VoiceCoachPanel from '../components/voice/VoiceCoachPanel';
 import AppBar from '../components/common/AppBar';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
+function stripHtml(text: string): string {
+  return text.replace(/<[^>]*>/g, '');
+}
+
 const SITTING_TITLES: Record<string, { en: string; ta: string }> = {
   '1': { en: 'Getting to Know You', ta: 'உங்களை அறிந்துகொள்ளுதல்' },
   '2': { en: 'Food & Activity', ta: 'உணவு மற்றும் செயல்பாடு' },
@@ -80,12 +84,17 @@ export default function Conversation() {
     try {
       await startSitting(user.id, sitting);
       const priorResponses: any[] = useConversationStore.getState().responses || [];
+      const currentScript = useConversationStore.getState().script;
+      const allQuestions = currentScript ? currentScript.modules.flatMap(m => m.questions) : [];
       setMessages(
-        priorResponses.map((r: any) => ({
-          id: `resume-${r.id}`,
-          role: 'user' as const,
-          text: (r.answer_display_label?.[language]) || r.answer_value,
-        }))
+        priorResponses.flatMap((r: any) => {
+          const questionText = language === 'ta' ? r.question_text_ta : r.question_text_en;
+          const fallback = allQuestions.find(q => q.id === r.question_id)?.prompt[language];
+          return [
+            { id: `resume-bot-${r.id}`, role: 'bot' as const, text: stripHtml(questionText || fallback || '') },
+            { id: `resume-${r.id}`, role: 'user' as const, text: (r.answer_display_label?.[language]) || r.answer_value },
+          ];
+        })
       );
       setAnsweredIds(new Set(priorResponses.map((r: any) => r.question_id)));
     } catch (e) {
@@ -137,11 +146,10 @@ export default function Conversation() {
       );
     }
 
-    setMessages(prev => [...prev, {
-      id: `user-${Date.now()}`,
-      role: 'user',
-      text: answerText,
-    }]);
+    setMessages(prev => [...prev,
+      { id: `bot-${currentQ.id}`, role: 'bot', text: stripHtml(currentQ.prompt[language]) },
+      { id: `user-${Date.now()}`, role: 'user', text: answerText },
+    ]);
 
     setInputValue(undefined);
     setAnsweredIds(prev => new Set(prev).add(currentQ.id));

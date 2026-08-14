@@ -157,6 +157,42 @@ export function matchVoiceTranscript(
     return trimmed;
   }
 
+  if (inputType === 'blood_sugar_target') {
+    const overMatch = trimmed.match(/(\d+(?:\.\d+)?)\s*(?:\/|over|-|and)\s*(\d+(?:\.\d+)?)/i);
+    if (overMatch) {
+      return `${Math.round(parseFloat(overMatch[1]))}/${Math.round(parseFloat(overMatch[2]))}`;
+    }
+
+    const allNums = trimmed.match(/\d+(?:\.\d+)?/g);
+    if (allNums && allNums.length >= 2) {
+      const nums = allNums.map(Number).filter(n => n >= 50 && n <= 400);
+      if (nums.length >= 2) {
+        const sorted = [...nums].sort((a, b) => a - b);
+        return `${Math.round(sorted[0])}/${Math.round(sorted[1])}`;
+      }
+    }
+
+    return trimmed;
+  }
+
+  if (inputType === 'blood_pressure') {
+    const overMatch = trimmed.match(/(\d+(?:\.\d+)?)\s*(?:\/|over|-)\s*(\d+(?:\.\d+)?)/i);
+    if (overMatch) {
+      return `${Math.round(parseFloat(overMatch[1]))}/${Math.round(parseFloat(overMatch[2]))}`;
+    }
+
+    const allNums = trimmed.match(/\d+(?:\.\d+)?/g);
+    if (allNums && allNums.length >= 2) {
+      const nums = allNums.map(Number).filter(n => n >= 30 && n <= 260);
+      if (nums.length >= 2) {
+        const sorted = [...nums].sort((a, b) => b - a);
+        return `${Math.round(sorted[0])}/${Math.round(sorted[1])}`;
+      }
+    }
+
+    return trimmed;
+  }
+
   if (inputType === 'number' || inputType === 'decimal' || inputType === 'scale') {
     const num = extractNumber(trimmed);
     if (num !== null) {

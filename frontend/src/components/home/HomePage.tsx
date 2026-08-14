@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 
 const SITTINGS = ['1', '2', '3'];
+const NOTIF_ASKED_KEY = 'df_notif_asked';
 
 function nextSitting(sessions: any[]): { sitting: string; inProgress: boolean } | null {
   const completed = new Set(sessions.filter((s: any) => s.status === 'completed').map((s: any) => s.sitting));
@@ -40,8 +41,12 @@ export default function HomePage() {
   const [dismissNotifBanner, setDismissNotifBanner] = useState(true);
 
   useEffect(() => {
+    if (localStorage.getItem(NOTIF_ASKED_KEY)) return; // already asked once -- never show again
     getPushSubscriptionStatus().then(status => {
-      if (status !== 'granted') {
+      if (status === 'granted' || status === 'denied') {
+        // permission already decided at the browser level; nothing left to ask
+        localStorage.setItem(NOTIF_ASKED_KEY, '1');
+      } else {
         setDismissNotifBanner(false);
       }
     });
@@ -107,14 +112,14 @@ export default function HomePage() {
           </span>
           <button className="btn-primary" onClick={() => {
             setDismissNotifBanner(true);
-            sessionStorage.setItem('df_notif_dismissed', '1');
+            localStorage.setItem(NOTIF_ASKED_KEY, '1');
             if (user) subscribeToPush(user.id);
           }} style={{ padding: '3px 10px', fontSize: 11, whiteSpace: 'nowrap', width: 'auto' }}>
             {t.reminderEnable}
           </button>
           <button onClick={() => {
             setDismissNotifBanner(true);
-            sessionStorage.setItem('df_notif_dismissed', '1');
+            localStorage.setItem(NOTIF_ASKED_KEY, '1');
           }} style={{ padding: '3px 10px', fontSize: 11, whiteSpace: 'nowrap', background: 'none', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text-muted)', cursor: 'pointer' }}>
             Not Allow
           </button>
@@ -170,22 +175,36 @@ export default function HomePage() {
       </div>
 
       <div className="action-cards">
+        {/* Assessments and check-ins always come first -- they're time-bound and
+            block the rest of the program, so they shouldn't get buried below
+            day-to-day logging cards. */}
         {pending ? (
           <ActionCard
             icon={<ClipboardList size={24} />}
             title={pending.inProgress ? `${t.resumeAssessment} ${pending.sitting}` : `${t.startAssessment} ${pending.sitting}`}
             description={t.descAssessment}
             onClick={() => navigate(`/conversation/${pending.sitting}`)}
-            color={pending.inProgress ? '#F59E0B' : '#2C6E49'}
+            color={pending.inProgress ? '#F59E0B' : '#5B9BD5'}
           />
         ) : (
-          <ActionCard
-            icon={<FileText size={24} />}
-            title={t.viewPlan}
-            description={t.descPlan}
-            onClick={() => navigate('/care-plan/latest')}
-            color="#2C6E49"
-          />
+          <>
+            <ActionCard
+              icon={<FileText size={24} />}
+              title={t.viewPlan}
+              description={t.descPlan}
+              onClick={() => navigate('/care-plan/latest')}
+              color="#5B9BD5"
+            />
+            {allSittingsDone && checkInStatus && (
+              <ActionCard
+                icon={<Shield size={24} />}
+                title={t.followUp}
+                description={checkInStatus.title}
+                onClick={() => navigate('/check-in')}
+                color={checkInStatus.color}
+              />
+            )}
+          </>
         )}
 
         <ActionCard
@@ -203,16 +222,6 @@ export default function HomePage() {
           onClick={() => navigate('/sugar')}
           color="#F59E0B"
         />
-
-        {allSittingsDone && (
-          <ActionCard
-            icon={<Shield size={24} />}
-            title={t.followUp}
-            description={checkInStatus ? checkInStatus.title : t.followUp}
-            onClick={() => navigate('/check-in')}
-            color="#8B5CF6"
-          />
-        )}
       </div>
 
       <div className="home-footer">

@@ -10,12 +10,10 @@ ICMR_TARGETS = {
     "hba1c": "Below 7%",
 }
 
-BARRIER_KEYWORDS = {
-    "cost": ["cost", "expensive", "afford", "money"],
-    "forgetfulness": ["forget", "forgot", "remember"],
-    "side_effect": ["side effect", "upset", "nausea", "sick"],
-    "health_belief": ["feel well", "feel fine", "no need", "normal now", "stopped because"],
-}
+FASTING_TARGET_RANGE = (80, 110)
+POST_MEAL_TARGET_RANGE = (120, 140)
+
+VALID_BARRIERS = {"forgetfulness", "cost", "side_effect", "health_belief"}
 
 
 def classify_adherence(doses_missed_last_7_days: Any) -> str:
@@ -58,12 +56,22 @@ def build_monitoring_plan(glycemic_category: str, smbg_frequency: str) -> Dict[s
     }
 
 
-def classify_barrier(missed_reason_text: Any) -> str:
-    text = str(missed_reason_text or "").lower()
-    for category, keywords in BARRIER_KEYWORDS.items():
-        if any(kw in text for kw in keywords):
-            return category
-    return "unknown"
+def classify_barrier(missed_reason_value: Any) -> str:
+    """missed_reason_value is a controlled single_choice answer (one of
+    VALID_BARRIERS, or "other"/blank) -- no keyword guessing needed."""
+    value = str(missed_reason_value or "").strip()
+    return value if value in VALID_BARRIERS else "unknown"
+
+
+def classify_target_knowledge(stated_fasting: Any, stated_post_meal: Any) -> bool:
+    """The patient states their own understanding of fasting/post-meal
+    targets; this grades it against the real ICMR ranges rather than
+    trusting a self-report of "yes I know it"."""
+    fasting = safe_int(stated_fasting)
+    post_meal = safe_int(stated_post_meal)
+    fasting_ok = FASTING_TARGET_RANGE[0] <= fasting <= FASTING_TARGET_RANGE[1]
+    post_meal_ok = POST_MEAL_TARGET_RANGE[0] <= post_meal <= POST_MEAL_TARGET_RANGE[1]
+    return fasting_ok and post_meal_ok
 
 
 def build_target_card(age_band: str) -> Dict[str, Any]:
@@ -79,7 +87,9 @@ def compute_m3(answers: Dict[str, Any], regimen_class: str = "metformin_only",
                age_band: str = "under_60") -> Dict[str, Any]:
     adherence = classify_adherence(answers.get("dosesMissedLast7Days"))
     smbg_frequency = classify_smbg_frequency(regimen_class, hypoglycemia_risk_flag, glycemic_category)
-    target_answer_correct = bool(answers.get("targetKnowledgeCorrect", False))
+    target_answer_correct = classify_target_knowledge(
+        answers.get("statedTargetFasting"), answers.get("statedTargetPostMeal")
+    )
 
     result = {
         "adherence": adherence,

@@ -56,8 +56,8 @@
           "prompt": { "en": "What was your last fasting sugar reading?", "ta": "உங்கள் கடைசி வெறும் வயிற்று சர்க்கரை அளவு என்ன?" } },
         { "id": "post_meal_sugar", "input_type": "number", "save_as": "postMealSugar", "unit": "mg/dl",
           "prompt": { "en": "What was your last post-meal sugar reading?", "ta": "உணவுக்குப் பிறகான உங்கள் கடைசி சர்க்கரை அளவு என்ன?" } },
-        { "id": "bp", "input_type": "text", "save_as": "bpSystolic,bpDiastolic",
-          "prompt": { "en": "What was your last blood pressure reading?", "ta": "உங்கள் கடைசி இரத்த அழுத்த அளவு என்ன?" } },
+        { "id": "bp", "input_type": "blood_pressure", "save_as": "bpSystolic,bpDiastolic",
+          "prompt": { "en": "What was your last blood pressure reading? (e.g. 120/80)", "ta": "உங்கள் கடைசி இரத்த அழுத்த அளவு என்ன? (எ.கா. 120/80)" } },
         { "id": "medications", "input_type": "text", "save_as": "medications", "required": true,
           "prompt": { "en": "Please tell me the names and timings of all your medicines, including any siddha, ayurvedic or herbal medicine you take.", "ta": "நீங்கள் எடுத்துக் கொள்ளும் அனைத்து மருந்துகளின் பெயர்கள் மற்றும் நேரங்களை சொல்லுங்கள் - சித்த, ஆயுர்வேத அல்லது மூலிகை மருந்துகள் இருந்தாலும் சேர்த்து சொல்லுங்கள்." } },
         { "id": "last_visit_date", "input_type": "date", "save_as": "lastVisitDate",
@@ -121,9 +121,17 @@
       "sitting": "3",
       "questions": [
         { "id": "missed_doses", "input_type": "number", "save_as": "dosesMissedLast7Days", "prompt": { "en": "In the last seven days, how many times did you miss a dose?", "ta": "கடந்த ஏழு நாட்களில், எத்தனை முறை மருந்து தவறவிட்டீர்கள்?" } },
-        { "id": "missed_dose_reason", "input_type": "text", "save_as": "missedDoseReason", "prompt": { "en": "What is the main reason you missed a dose?", "ta": "மருந்து தவறவிட்டதற்கான முக்கிய காரணம் என்ன?" } },
+        { "id": "missed_dose_reason", "input_type": "single_choice", "save_as": "missedDoseReason",
+          "options": [
+            { "value": "forgetfulness", "label": { "en": "I forgot", "ta": "நான் மறந்துவிட்டேன்" } },
+            { "value": "cost", "label": { "en": "I can't afford it", "ta": "எனக்கு அதை வாங்க முடியவில்லை" } },
+            { "value": "side_effect", "label": { "en": "It gives me side effects", "ta": "அது எனக்கு பக்க விளைவுகளை ஏற்படுத்துகிறது" } },
+            { "value": "health_belief", "label": { "en": "I feel fine, so I stopped", "ta": "நான் நலமாக உணர்கிறேன், அதனால் நிறுத்திவிட்டேன்" } },
+            { "value": "other", "label": { "en": "Something else", "ta": "வேறு காரணம்" } }
+          ],
+          "prompt": { "en": "What is the main reason you missed a dose?", "ta": "மருந்து தவறவிட்டதற்கான முக்கிய காரணம் என்ன?" } },
         { "id": "sugar_check_frequency", "input_type": "text", "save_as": "sugarCheckFrequency", "prompt": { "en": "How often do you check your sugar?", "ta": "எவ்வளவு அடிக்கடி உங்கள் சர்க்கரை அளவைச் சோதிப்பீர்கள்?" } },
-        { "id": "target_knowledge", "input_type": "confirmation", "save_as": "targetKnowledgeCorrect", "prompt": { "en": "What should your target blood glucose numbers be?", "ta": "உங்கள் இலக்கு இரத்த சர்க்கரை அளவு என்னவாக இருக்க வேண்டும்?" } }
+        { "id": "target_knowledge", "input_type": "blood_sugar_target", "save_as": "statedTargetFasting,statedTargetPostMeal", "prompt": { "en": "What should your target fasting and post-meal blood glucose numbers be? (e.g. 100/130)", "ta": "உங்கள் இலக்கு வெறும் வயிறு மற்றும் உணவுக்குப் பிறகான இரத்த சர்க்கரை அளவுகள் என்னவாக இருக்க வேண்டும்? (எ.கா. 100/130)" } }
       ]
     },
     {

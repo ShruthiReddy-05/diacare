@@ -19,6 +19,8 @@ export type InputType =
   | "date"
   | "scale"
   | "height_weight"
+  | "blood_pressure"
+  | "blood_sugar_target"
   | "confirmation";
 
 export interface QuestionDefinition {
