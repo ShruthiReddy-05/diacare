@@ -6,12 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func, or_
 from typing import Optional, Any
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import timedelta
 from utils import ist_now
 
 from database import get_db
-from models.admin_user import AdminUser, AdminSession, verify_password
+from models.admin_user import AdminUser, AdminSession, verify_password, hash_password
 from models.notification import NotificationEvent, NotificationSubscription
 from models.checkin import CheckInSession, WeeklyDomainMetric
 from models.audio_asset import AudioAsset
@@ -52,6 +52,11 @@ class LoginResponse(BaseModel):
     role: str
 
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8)
+
+
 async def get_current_admin(authorization: Optional[str] = Header(None), db: AsyncSession = Depends(get_db)):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing or invalid token")
@@ -81,13 +86,25 @@ async def admin_login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
     return LoginResponse(token=session.token, adminId=admin.id, displayName=admin.display_name, role=admin.role)
 
 
+@router.post("/change-password")
+async def change_password(
+    body: ChangePasswordRequest,
+    db: AsyncSession = Depends(get_db),
+    admin: AdminUser = Depends(get_current_admin),
+):
+    if not verify_password(body.current_password, admin.password_hash):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Current password is incorrect")
+    admin.password_hash = hash_password(body.new_password)
+    await db.commit()
+    return {"message": "Password changed successfully"}
+
+
 @router.post("/seed")
 async def seed_admin(db: AsyncSession = Depends(get_db)):
     stmt = select(AdminUser).where(AdminUser.username == "admin")
     result = await db.execute(stmt)
     if result.scalar():
         return {"message": "Admin already exists"}
-    from models.admin_user import hash_password
     admin = AdminUser(username="admin", password_hash=hash_password("diafit2024"), display_name="Admin", role="admin")
     db.add(admin)
     await db.commit()

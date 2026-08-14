@@ -8,7 +8,7 @@ cleanupOutdatedCaches()
 registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')))
 
 self.addEventListener('push', (event) => {
-  let data = { title: 'DiaCare', body: '', url: '/home', tag: 'diafit', eventId: '' }
+  let data = { title: 'DiaCare', body: '', url: '/home', tag: 'diacare', eventId: '' }
   try {
     if (event.data) {
       const parsed = event.data.json()

@@ -65,8 +65,8 @@ async def lifespan(app: FastAPI):
     pass
 
 app = FastAPI(
-    title="DiaFit Voice API",
-    description="Backend API for DiaFit Voice - Diabetes Self-Care Chatbot (ICMR 2018 / AADE7)",
+    title="DiaCare Voice API",
+    description="Backend API for DiaCare Voice - Diabetes Self-Care Chatbot (ICMR 2018 / AADE7)",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -98,7 +98,7 @@ app.include_router(temp_audio_router)
 @app.get("/")
 async def root():
     return {
-        "app": "DiaFit Voice API",
+        "app": "DiaCare Voice API",
         "version": "1.0.0",
         "status": "healthy"
     }

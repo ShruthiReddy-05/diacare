@@ -136,6 +136,7 @@ export default function CarePlanView({ plan, riskTier, carePlanId }: Props) {
           <p className="careplan-warning">{plan.activity_plan.medical_clearance_note}</p>
         )}
         {plan.activity_plan.weekly_target && <p className="careplan-note">{plan.activity_plan.weekly_target}</p>}
+        {plan.activity_plan.activity_guidance && <p className="careplan-note">{plan.activity_plan.activity_guidance}</p>}
         {plan.activity_plan.ramp_protocol && (
           <div className="careplan-table">
             {plan.activity_plan.ramp_protocol.map((r, i) => (

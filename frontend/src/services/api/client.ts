@@ -1,5 +1,5 @@
 // In local dev this stays "" and vite.config.ts's proxy forwards /api to localhost:8000.
-// In production, set VITE_API_URL to the deployed backend's origin (e.g. https://diafit-api.onrender.com).
+// In production, set VITE_API_URL to the deployed backend's origin (e.g. https://diacare-api.onrender.com).
 const API_BASE = import.meta.env.VITE_API_URL || "";
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {

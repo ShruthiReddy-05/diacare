@@ -13,8 +13,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt'],
       manifest: {
-        name: 'DiaFit Diabetes Activity Coach',
-        short_name: 'DiaFit',
+        name: 'DiaCare Diabetes Self-Care Chatbot',
+        short_name: 'DiaCare',
         description: 'Bilingual physical activity coach for managing type 2 diabetes safely.',
         theme_color: '#2C6E49',
         background_color: '#0F172A',

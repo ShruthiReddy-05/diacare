@@ -117,6 +117,7 @@ export interface CarePlanSnapshot {
     activity_category: string | null;
     weekly_target: string | null;
     ramp_protocol: { weeks: string; daily_minutes: string; note: string }[] | null;
+    activity_guidance?: string | null;
     post_meal_walk_emphasis: boolean | null;
     resistance_exercise?: { activity_name: string; duration: string; frequency: string } | null;
     movement_break_rule?: string;

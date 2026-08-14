@@ -2,7 +2,7 @@
   "id": "diafit_voice_baseline",
   "version": "1.0.0",
   "status": "active",
-  "title": { "en": "DiaFit Voice", "ta": "டயாஃபிட் வாய்ஸ்" },
+  "title": { "en": "DiaCare Voice", "ta": "டயாகேர் வாய்ஸ்" },
   "modules": [
     {
       "id": "A",
@@ -10,8 +10,8 @@
       "sitting": "1",
       "questions": [
         { "id": "welcome", "input_type": "confirmation", "save_as": "welcomeAcknowledged",
-          "prompt": { "en": "Vanakkam! I am DiaFit, your diabetes self-care coach. I can help you with food, activity, medicines, sugar monitoring and everyday problems. I am not a doctor. I will never change your medicine doses.",
-                      "ta": "வணக்கம்! நான் டயாஃபிட், உங்கள் நீரிழிவு சுய-பராமரிப்பு பயிற்சியாளர். உணவு, உடற்பயிற்சி, மருந்துகள், சர்க்கரை கண்காணிப்பு மற்றும் அன்றாட பிரச்சனைகளில் நான் உங்களுக்கு உதவ முடியும். நான் மருத்துவர் அல்ல. உங்கள் மருந்தின் அளவை நான் ஒருபோதும் மாற்ற மாட்டேன்." } },
+          "prompt": { "en": "Vanakkam! I am DiaCare, your diabetes self-care coach. I can help you with food, activity, medicines, sugar monitoring and everyday problems. I am not a doctor. I will never change your medicine doses.",
+                      "ta": "வணக்கம்! நான் டயாகேர், உங்கள் நீரிழிவு சுய-பராமரிப்பு பயிற்சியாளர். உணவு, உடற்பயிற்சி, மருந்துகள், சர்க்கரை கண்காணிப்பு மற்றும் அன்றாட பிரச்சனைகளில் நான் உங்களுக்கு உதவ முடியும். நான் மருத்துவர் அல்ல. உங்கள் மருந்தின் அளவை நான் ஒருபோதும் மாற்ற மாட்டேன்." } },
         { "id": "consent", "input_type": "confirmation", "save_as": "consentGiven", "required": true,
           "options": [ { "value": "yes", "label": { "en": "Yes, I agree", "ta": "ஆம், நான் ஒப்புக்கொள்கிறேன்" } }, { "value": "no", "label": { "en": "No", "ta": "இல்லை" } } ],
           "prompt": { "en": "I am not a doctor and I will never change your medicine doses. Do you agree to begin, understanding this and that your answers will be used to build your personal care plan?",

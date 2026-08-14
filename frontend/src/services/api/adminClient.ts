@@ -194,4 +194,10 @@ export const adminApi = {
     adminRequest<{ deleted: number; message: string }>('/api/admin/temporary-audio/cleanup', {
       method: 'POST',
     }),
+
+  changePassword: (currentPassword: string, newPassword: string) =>
+    adminRequest<{ message: string }>('/api/admin/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+    }),
 };

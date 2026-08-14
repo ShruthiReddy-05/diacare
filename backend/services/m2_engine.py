@@ -11,12 +11,13 @@ RAMP_PROTOCOLS = {
         {"weeks": "3-4", "daily_minutes": "20-25", "note": "Add strength exercises."},
         {"weeks": "5-6", "daily_minutes": "30-45", "note": "Target 150 minutes a week."},
     ],
-    "moderate": [
-        {"weeks": "ongoing", "daily_minutes": "progressive", "note": "Add duration before intensity, toward 150 minutes a week."},
-    ],
-    "high": [
-        {"weeks": "ongoing", "daily_minutes": "maintain", "note": "Maintain current activity and add or increase resistance work."},
-    ],
+}
+
+# "moderate"/"high" aren't a week-by-week ramp -- they're already active, so the
+# plan is a single ongoing instruction, not a table with "weeks"/"minutes" columns.
+ACTIVITY_GUIDANCE = {
+    "moderate": "You're active 3-4 days a week. Add duration before intensity, working toward 150 minutes a week.",
+    "high": "You're active 5 or more days a week. Maintain this, and add or increase resistance work.",
 }
 
 
@@ -33,7 +34,8 @@ def build_activity_plan(activity_category: str, does_strength_yoga: bool, sedent
                          hypoglycemia_risk_flag: bool) -> Dict[str, Any]:
     plan = {
         "activity_category": activity_category,
-        "ramp_protocol": RAMP_PROTOCOLS[activity_category],
+        "ramp_protocol": RAMP_PROTOCOLS.get(activity_category),
+        "activity_guidance": ACTIVITY_GUIDANCE.get(activity_category),
         "weekly_target": "About 150 minutes a week of aerobic activity, resistance training at least twice weekly, plus flexibility work.",
         "resistance_gap": not does_strength_yoga,
         "movement_break_rule": sedentary_work_flag,
@@ -54,7 +56,8 @@ def apply_clearance_filter(plan: Dict[str, Any], exercise_clearance_required: bo
     """Any complication/clearance flag from B3 downgrades the plan before issue."""
     if exercise_clearance_required:
         plan["activity_category"] = "clearance_pending"
-        plan["ramp_protocol"] = [{"weeks": "until cleared", "daily_minutes": "10-15", "note": "Light activity only until medical clearance is obtained."}]
+        plan["ramp_protocol"] = None
+        plan["activity_guidance"] = "Light activity only, 10-15 minutes a day, until medical clearance is obtained."
         plan["resistance_exercise"] = None
         plan["medical_clearance_required"] = True
     else:
@@ -69,7 +72,8 @@ def apply_clearance_filter(plan: Dict[str, Any], exercise_clearance_required: bo
         ]
         if foot_risk_category == "active_foot_disease":
             plan["activity_category"] = "non_weight_bearing_only"
-            plan["ramp_protocol"] = [{"weeks": "until healed", "daily_minutes": "seated only", "note": "Non-weight-bearing activity only; refer to foot care within 24 hours."}]
+            plan["ramp_protocol"] = None
+            plan["activity_guidance"] = "Non-weight-bearing activity only, seated if needed, until healed. Refer to foot care within 24 hours."
             plan["resistance_exercise"] = None
 
     return plan

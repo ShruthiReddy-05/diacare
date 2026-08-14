@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef, type ChangeEvent } from 'react';
+import { useEffect, useState, useRef, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { adminApi, clearToken, isAdminLoggedIn, exportToCsv, type OverviewMetrics, type HealthInfo, type AdminUserRow } from '../services/api/adminClient';
 import {
   LayoutDashboard, Users, RefreshCcw, AlertTriangle,
   Heart, Bell, Shield, LogOut, Search, Headphones, Play,
-  Send, Database, Download, X, BarChart3,
+  Send, Database, Download, X, BarChart3, Lock,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -60,6 +60,11 @@ export default function AdminDashboard() {
   const [cleanupRunning, setCleanupRunning] = useState(false);
   const [cleanupResult, setCleanupResult] = useState('');
   const [backupResult, setBackupResult] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordChanging, setPasswordChanging] = useState(false);
+  const [passwordMsg, setPasswordMsg] = useState<{ text: string; isError: boolean } | null>(null);
 
   useEffect(() => {
     if (!isAdminLoggedIn()) { navigate('/admin'); return; }
@@ -161,12 +166,37 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleChangePassword = async (e: FormEvent) => {
+    e.preventDefault();
+    setPasswordMsg(null);
+    if (newPassword.length < 8) {
+      setPasswordMsg({ text: 'New password must be at least 8 characters.', isError: true });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordMsg({ text: 'New password and confirmation do not match.', isError: true });
+      return;
+    }
+    setPasswordChanging(true);
+    try {
+      await adminApi.changePassword(currentPassword, newPassword);
+      setPasswordMsg({ text: 'Password changed. Use it next time you log in.', isError: false });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (e: any) {
+      setPasswordMsg({ text: e.message || 'Failed to change password', isError: true });
+    } finally {
+      setPasswordChanging(false);
+    }
+  };
+
   const handleLogout = () => {
     clearToken();
     navigate('/admin');
   };
 
-  const exportUsers = () => exportToCsv(usersList, 'diafit_users.csv');
+  const exportUsers = () => exportToCsv(usersList, 'diacare_users.csv');
 
   const handleExportResponses = async () => {
     setExporting('responses');
@@ -174,7 +204,7 @@ export default function AdminDashboard() {
     try {
       const rows = await adminApi.exportResponses();
       if (!rows.length) { setExportMsg('No assessment responses recorded yet.'); return; }
-      exportToCsv(rows, `diafit_assessment_responses_${new Date().toISOString().slice(0, 10)}.csv`);
+      exportToCsv(rows, `diacare_assessment_responses_${new Date().toISOString().slice(0, 10)}.csv`);
     } catch (e: any) {
       setExportMsg(e.message || 'Export failed');
     } finally {
@@ -188,7 +218,7 @@ export default function AdminDashboard() {
     try {
       const rows = await adminApi.exportCheckins();
       if (!rows.length) { setExportMsg('No weekly check-ins recorded yet.'); return; }
-      exportToCsv(rows, `diafit_weekly_checkins_${new Date().toISOString().slice(0, 10)}.csv`);
+      exportToCsv(rows, `diacare_weekly_checkins_${new Date().toISOString().slice(0, 10)}.csv`);
     } catch (e: any) {
       setExportMsg(e.message || 'Export failed');
     } finally {
@@ -209,7 +239,7 @@ export default function AdminDashboard() {
     <div className="admin-layout">
       <aside className={`admin-sidebar ${sidebarOpen ? '' : 'admin-sidebar-collapsed'}`}>
         <div className="admin-sidebar-header">
-          {sidebarOpen && <span className="admin-sidebar-logo">DiaFit Admin</span>}
+          {sidebarOpen && <span className="admin-sidebar-logo">DiaCare Admin</span>}
           <button onClick={() => setSidebarOpen(o => !o)} className="admin-sidebar-toggle">
             <LayoutDashboard size={18} />
           </button>
@@ -400,6 +430,30 @@ export default function AdminDashboard() {
                     <p className="admin-audio-status">Status: {healthInfo.status} | DB: {healthInfo.db} | {healthInfo.responseTimeMs}ms</p>
                     <div className="admin-audio-actions"><button className="admin-action-btn" onClick={loadHealth}><RefreshCcw size={16} /> Refresh</button></div>
                   </>
+                )}
+              </div>
+
+              <div className="admin-scard">
+                <h3 className="admin-scard-title"><Lock size={18} /> Change Password</h3>
+                <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 320 }}>
+                  <input
+                    className="form-input" type="password" placeholder="Current password"
+                    value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} required
+                  />
+                  <input
+                    className="form-input" type="password" placeholder="New password (min. 8 characters)"
+                    value={newPassword} onChange={e => setNewPassword(e.target.value)} required minLength={8}
+                  />
+                  <input
+                    className="form-input" type="password" placeholder="Confirm new password"
+                    value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required
+                  />
+                  <button className="admin-action-btn" type="submit" disabled={passwordChanging} style={{ alignSelf: 'flex-start' }}>
+                    {passwordChanging ? 'Changing...' : 'Change Password'}
+                  </button>
+                </form>
+                {passwordMsg && (
+                  <p className={passwordMsg.isError ? 'admin-msg admin-msg-error' : 'admin-msg admin-msg-info'}>{passwordMsg.text}</p>
                 )}
               </div>
 

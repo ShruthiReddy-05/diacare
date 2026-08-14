@@ -40,14 +40,14 @@ export interface LocalActivityLog {
   synced: number; // 0 = unsynced, 1 = synced
 }
 
-export class DiaFitDatabase extends Dexie {
+export class DiaCareDatabase extends Dexie {
   settings!: Table<LocalSetting>;
   assessmentSessions!: Table<LocalAssessmentSession>;
   sugarReadings!: Table<LocalSugarReading>;
   activityLogs!: Table<LocalActivityLog>;
 
   constructor() {
-    super('DiaFitDatabase');
+    super('DiaCareDatabase');
     this.version(1).stores({
       settings: 'key',
       assessmentSessions: 'id, user_id, status',
@@ -57,4 +57,4 @@ export class DiaFitDatabase extends Dexie {
   }
 }
 
-export const db = new DiaFitDatabase();
+export const db = new DiaCareDatabase();

@@ -23,7 +23,7 @@ from models.backup_log import BackupLog
 
 logger = logging.getLogger(__name__)
 
-BACKUP_DIR_LOCAL = Path("/opt/apps/diafit/backups")
+BACKUP_DIR_LOCAL = Path("/opt/apps/diacare/backups")
 BACKUP_DIR_GITHUB = "backups/"
 MAX_BACKUPS = 15
 MIN_DAILY = 7
@@ -129,7 +129,7 @@ def _pg_dump_local(pg_url, bkp_path):
 
 def _parse_backup_name(name):
     try:
-        date_part = name.replace("DiaFit_", "").replace(".db", "").replace(".bkp", "")
+        date_part = name.replace("DiaCare_", "").replace(".db", "").replace(".bkp", "")
         return datetime.datetime.strptime(date_part, "%Y%m%d_%H%M%S")
     except (ValueError, AttributeError):
         return None
@@ -236,8 +236,8 @@ def do_backup(triggered_by="auto"):
         IST = datetime.timezone(datetime.timedelta(hours=5, minutes=30))
         timestamp = datetime.datetime.now(IST).strftime("%Y%m%d_%H%M%S")
 
-        tmp_sqlite = f"/tmp/DiaFit_{timestamp}.db"
-        local_bkp = BACKUP_DIR_LOCAL / f"DiaFit_{timestamp}.bkp"
+        tmp_sqlite = f"/tmp/DiaCare_{timestamp}.db"
+        local_bkp = BACKUP_DIR_LOCAL / f"DiaCare_{timestamp}.bkp"
 
         logger.info("Starting backup (triggered_by=%s) ...", triggered_by)
 
@@ -247,7 +247,7 @@ def do_backup(triggered_by="auto"):
         # Upload to GitHub
         repo = _get_github_repo()
         if repo:
-            gh_path = f"{BACKUP_DIR_GITHUB}DiaFit_{timestamp}.db"
+            gh_path = f"{BACKUP_DIR_GITHUB}DiaCare_{timestamp}.db"
             with open(tmp_sqlite, "rb") as f:
                 content = f.read()
             repo.create_file(gh_path, f"Backup {timestamp}", content, branch="main")

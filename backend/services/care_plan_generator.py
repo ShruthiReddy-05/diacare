@@ -65,6 +65,7 @@ def build_activity_plan(m2_output: Dict[str, Any]) -> Dict[str, Any]:
         "activity_category": m2_output.get("activity_category"),
         "weekly_target": m2_output.get("weekly_target"),
         "ramp_protocol": m2_output.get("ramp_protocol"),
+        "activity_guidance": m2_output.get("activity_guidance"),
         "post_meal_walk_emphasis": m2_output.get("post_meal_walk_emphasis"),
         "trace": ["activityDaysPerWeek", "doesStrengthYogaStretching"],
     }

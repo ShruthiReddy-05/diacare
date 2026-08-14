@@ -31,7 +31,7 @@ export default function AdminLogin() {
       <div className="admin-login-card">
         <div className="admin-login-header">
           <Shield size={32} />
-          <h1>DiaFit Admin</h1>
+          <h1>DiaCare Admin</h1>
           <p>Sign in to access the dashboard</p>
         </div>
         <form className="admin-login-form" onSubmit={handleSubmit}>

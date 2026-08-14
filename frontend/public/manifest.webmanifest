@@ -1,6 +1,6 @@
 {
-  "name": "DiaFit Diabetes Activity Coach",
-  "short_name": "DiaFit",
+  "name": "DiaCare Diabetes Self-Care Chatbot",
+  "short_name": "DiaCare",
   "description": "Bilingual physical activity coach for managing type 2 diabetes safely.",
   "start_url": "/",
   "display": "standalone",
