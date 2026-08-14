@@ -1,7 +1,7 @@
 export const translations = {
   en: {
-    appTitle: "DiaFit Coach",
-    tagline: "Your Diabetes Exercise Guide",
+    appTitle: "DiaCare",
+    tagline: "YOUR DIABETES SELF-CARE CHATBOT",
     home: "Home",
     assessment: "Assessment",
     history: "History",
@@ -113,7 +113,7 @@ export const translations = {
     descPlan: "View your exercise plan",
     descActivity: "Log weekly physical activity",
     descSugar: "Record your blood sugar level",
-    disclaimer: "DiaFit Coach v2.0 — Not a substitute for medical advice.",
+    disclaimer: "DiaCare v2.0 — Not a substitute for medical advice.",
     followUp: "Weekly Check-In",
     followUpDue: "Check-In Due",
     followUpCompleted: "Check-In Completed",
@@ -163,8 +163,8 @@ export const translations = {
     festivalFastingMessage: "Plan your meal timing with your medicine timing, and check your sugar more often on that day. Discuss any planned fasting with your doctor first.",
   },
   ta: {
-    appTitle: "டயாஃபிட் கோச்",
-    tagline: "உங்கள் நீரிழிவு உடற்பயிற்சி வழிகாட்டி",
+    appTitle: "டயாகேர்",
+    tagline: "உங்கள் நீரிழிவு சுய-பராமரிப்பு உரையாடல் உதவியாளர்",
     home: "முகப்பு",
     assessment: "மதிப்பீடு",
     history: "வரலாறு",
@@ -276,7 +276,7 @@ export const translations = {
     descPlan: "உங்கள் உடற்பயிற்சி திட்டத்தைப் பார்க்கவும்",
     descActivity: "வாராந்திர உடல் செயல்பாட்டைப் பதிவு செய்யவும்",
     descSugar: "உங்கள் இரத்த சர்க்கரை அளவைப் பதிவு செய்யவும்",
-    disclaimer: "டயாஃபிட் கோச் v2.0 — இது மருத்துவ ஆலோசனைக்கு மாற்று அல்ல.",
+    disclaimer: "டயாகேர் v2.0 — இது மருத்துவ ஆலோசனைக்கு மாற்று அல்ல.",
     followUp: "வாராந்திர கண்காணிப்பு",
     followUpDue: "கண்காணிப்பு நிலுவையில்",
     followUpCompleted: "கண்காணிப்பு முடிந்தது",

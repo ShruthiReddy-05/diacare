@@ -30,7 +30,7 @@ function App() {
   if (!ready || isLoading) {
     return (
       <div className="loading-screen">
-        <LoadingSpinner text="DiaFit Coach" />
+        <LoadingSpinner text="DiaCare" />
       </div>
     )
   }

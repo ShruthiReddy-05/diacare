@@ -24,7 +24,7 @@ export default function AppBar({ title, showBack, onBack, rightAction }: Props) 
               </svg>
             </button>
           ) : (
-            <img src="/diafit_logo.jpeg" alt="DiaFit Logo" className="app-bar-logo" />
+            <img src="/diacare_logo_clean.png" alt="DiaCare Logo" className="app-bar-logo" />
           )}
           <h1 className="app-bar-title">{title || t.appTitle}</h1>
         </div>

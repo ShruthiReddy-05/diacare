@@ -33,7 +33,7 @@ export default function FirstLandingPage() {
       <div className="landing-container">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="landing-card">
           <div className="logo-area">
-            <img src="/diafit_logo.jpeg" alt="DiaFit Logo" className="app-main-logo" />
+            <img src="/diacare_logo_clean.png" alt="DiaCare Logo" className="app-main-logo" />
             <h1>{t.appTitle}</h1>
           </div>
           <div className="recovery-id-box">
@@ -54,7 +54,7 @@ export default function FirstLandingPage() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="landing-card">
         <div className="logo-area">
           <div className="logo-icon-wrapper brand-logo-wrapper">
-            <img src="/diafit_logo.jpeg" alt="DiaFit Logo" className="app-main-logo" />
+            <img src="/diacare_logo_clean.png" alt="DiaCare Logo" className="app-main-logo" />
           </div>
           <h1 className="app-title">{t.appTitle}</h1>
           <p className="tagline">{t.tagline}</p>

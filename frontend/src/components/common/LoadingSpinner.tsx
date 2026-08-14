@@ -21,8 +21,8 @@ export default function LoadingSpinner({ text, showLogo = true, size = 'md' }: L
         >
           <div className="loading-logo-glow" />
           <img
-            src="/diafit_logo.jpeg"
-            alt="DiaFit Logo"
+            src="/diacare_logo_clean.png"
+            alt="DiaCare Logo"
             className="loading-logo-img"
           />
         </motion.div>

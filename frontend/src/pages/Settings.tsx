@@ -276,7 +276,7 @@ export default function Settings() {
         </div>
 
         <div className="settings-footer">
-          <p className="disclaimer">DiaFit Coach v2.0 — Not a substitute for medical advice.</p>
+          <p className="disclaimer">DiaCare v2.0 — Not a substitute for medical advice.</p>
           <p className="disclaimer-small">Data is stored locally on your device and on the server.</p>
         </div>
       </main>
