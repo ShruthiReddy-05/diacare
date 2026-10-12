@@ -26,4 +26,6 @@ services:
 
 databases:
   - name: diafit-db
-    plan: free
+    # Not "free": Render deletes free Postgres databases after they expire,
+    # which took the original diafit-db (and all its data) down.
+    plan: basic-256mb
