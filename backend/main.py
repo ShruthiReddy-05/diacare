@@ -53,7 +53,12 @@ def _to_sync_url(async_url):
 
 @event.listens_for(Session, "after_commit")
 def trigger_backup(session):
-    _check_and_run_backup()
+    # Runs after every commit, when the data is already saved. A failing
+    # backup check must never turn that request into a 500.
+    try:
+        _check_and_run_backup()
+    except Exception:
+        logger.exception("Backup check failed; request data was already committed")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

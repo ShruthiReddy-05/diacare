@@ -329,3 +329,16 @@ def test_speech_proxy_has_no_path_into_engine_or_lock():
         elif isinstance(node, ast.ImportFrom):
             imported.add(node.module or "")
     assert not any(m.startswith(("services", "routers", "models")) for m in imported), imported
+
+
+async def test_backup_check_failure_does_not_fail_committed_request(client, session_maker, monkeypatch):
+    """The after-commit backup hook runs on every commit; if it raises, the
+    data is already saved and the request must still succeed (it used to 500)."""
+    import main
+
+    def broken_backup_check():
+        raise RuntimeError("backup database unreachable")
+
+    monkeypatch.setattr(main, "_check_and_run_backup", broken_backup_check)
+    resp = await client.post("/api/users/register", json={"first_name": "Bk", "last_name": "Up", "preferred_language": "en"})
+    assert resp.status_code == 201, resp.text
