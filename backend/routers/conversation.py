@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -11,7 +12,7 @@ from models.user import User
 from models.conversation import ConversationSession, ConversationResponse
 from models.baseline_profile import BaselineProfile
 from models.module_outcome import ModuleOutcome
-from models.safety_event import SafetyEvent
+from models.safety_event import SafetyEvent, SAFETY_STATUS_OPEN
 from schemas.conversation import (
     ConversationSessionCreate, ConversationSessionResponse,
     ConversationResponseCreate, ConversationResponseOut, CompleteSittingRequest,
@@ -76,13 +77,15 @@ def _apply_save_as(answers: Dict[str, Any], question_id: str, raw_value: str) ->
         answers[key] = _cast(part)
 
 
-async def build_user_answers(user_id: str, db: AsyncSession) -> tuple[Dict[str, Any], set, str]:
+async def build_user_answers(user_id: str, db: AsyncSession, since: Optional[datetime] = None) -> tuple[Dict[str, Any], set, str]:
     stmt = (
         select(ConversationResponse)
         .join(ConversationSession, ConversationSession.id == ConversationResponse.session_id)
         .where(ConversationSession.user_id == user_id)
         .order_by(ConversationResponse.answered_at.asc())
     )
+    if since is not None:
+        stmt = stmt.where(ConversationResponse.answered_at > since)
     result = await db.execute(stmt)
     responses = result.scalars().all()
 
@@ -94,6 +97,38 @@ async def build_user_answers(user_id: str, db: AsyncSession) -> tuple[Dict[str, 
         modules_seen.add(resp.module_id)
         free_text_parts.append(resp.answer_value)
     return answers, modules_seen, " ".join(free_text_parts)
+
+
+def _screen_answers(answers: Dict[str, Any], free_text: str) -> List[str]:
+    """Every Module D trigger the answers raise: safety_engine plus the M4
+    self-harm classification (the same two sources complete_sitting uses)."""
+    codes = safety_engine.check_safety(answers, free_text=free_text)
+    if "self_harm" not in codes and m4_engine.compute_m4(answers).get("self_harm_expressed"):
+        codes.append("self_harm")
+    return codes
+
+
+async def _open_safety_events(user_id: str, session_id: str, source_module: str, codes: List[str], db: AsyncSession) -> None:
+    """Open one event per trigger code, unless that code is already open, or a
+    clinician acknowledged it and no answer given since then raises it again.
+    Screening runs over the patient's whole answer history, so without the
+    second check an acknowledged answer would re-lock them every sitting."""
+    created = False
+    for code in codes:
+        events = (await db.execute(
+            select(SafetyEvent).where(SafetyEvent.user_id == user_id, SafetyEvent.trigger_code == code)
+        )).scalars().all()
+        if any(e.status == SAFETY_STATUS_OPEN for e in events):
+            continue
+        last_ack = max((e.acknowledged_at for e in events if e.acknowledged_at), default=None)
+        if last_ack is not None:
+            answers_since, _, free_text_since = await build_user_answers(user_id, db, since=last_ack)
+            if code not in _screen_answers(answers_since, free_text_since):
+                continue
+        db.add(SafetyEvent(user_id=user_id, session_id=session_id, source_module=source_module, trigger_code=code))
+        created = True
+    if created:
+        await db.commit()
 
 
 @router.post("/sessions", response_model=ConversationSessionResponse, status_code=status.HTTP_201_CREATED)
@@ -234,16 +269,7 @@ async def complete_sitting(session_id: str, body: CompleteSittingRequest, db: As
     # (e.g. medications, missed-dose reason), so it also catches things like
     # an expression of self-harm that no structured question captures.
     triggered = safety_engine.check_safety(answers, free_text=free_text)
-    for code in triggered:
-        exists = (await db.execute(
-            select(SafetyEvent).where(
-                SafetyEvent.user_id == session.user_id, SafetyEvent.trigger_code == code, SafetyEvent.resolved == False,
-            )
-        )).scalar()
-        if not exists:
-            db.add(SafetyEvent(user_id=session.user_id, session_id=session_id, source_module=body.sitting, trigger_code=code))
-    if triggered:
-        await db.commit()
+    await _open_safety_events(session.user_id, session_id, body.sitting, triggered, db)
 
     baseline = None
     if {"B1", "B2", "B3"} & modules_seen or body.sitting == "1":
@@ -279,14 +305,7 @@ async def complete_sitting(session_id: str, body: CompleteSittingRequest, db: As
         # Any expression of self-harm halts coaching immediately, per Module D --
         # m4_engine only classifies the answer, the safety module owns the escalation.
         if m4_out.get("self_harm_expressed") and "self_harm" not in triggered:
-            exists = (await db.execute(
-                select(SafetyEvent).where(
-                    SafetyEvent.user_id == session.user_id, SafetyEvent.trigger_code == "self_harm", SafetyEvent.resolved == False,
-                )
-            )).scalar()
-            if not exists:
-                db.add(SafetyEvent(user_id=session.user_id, session_id=session_id, source_module=body.sitting, trigger_code="self_harm"))
-                await db.commit()
+            await _open_safety_events(session.user_id, session_id, body.sitting, ["self_harm"], db)
             triggered.append("self_harm")
 
     session.status = "completed"

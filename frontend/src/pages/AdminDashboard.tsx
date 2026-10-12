@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { adminApi, clearToken, isAdminLoggedIn, exportToCsv, type OverviewMetrics, type HealthInfo, type AdminUserRow } from '../services/api/adminClient';
+import { adminApi, clearToken, isAdminLoggedIn, exportToCsv, type OverviewMetrics, type HealthInfo, type AdminUserRow, type SafetyEventRow } from '../services/api/adminClient';
 import {
   LayoutDashboard, Users, RefreshCcw, AlertTriangle,
   Heart, Bell, Shield, LogOut, Search, Headphones, Play,
@@ -8,10 +8,11 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-type TabId = 'overview' | 'users' | 'export' | 'notifications' | 'audio' | 'backend';
+type TabId = 'overview' | 'safety' | 'users' | 'export' | 'notifications' | 'audio' | 'backend';
 
 const TABS: { id: TabId; label: string; icon: LucideIcon }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'safety', label: 'Safety Events', icon: Shield },
   { id: 'users', label: 'Users', icon: Users },
   { id: 'export', label: 'Export', icon: Download },
   { id: 'notifications', label: 'Notifications', icon: Bell },
@@ -40,6 +41,12 @@ export default function AdminDashboard() {
   const [detailUser, setDetailUser] = useState<AdminUserRow | null>(null);
   const [detailData, setDetailData] = useState<any>(null);
   const [detailLoading, setDetailLoading] = useState(false);
+
+  // ── Safety tab ──
+  const [safetyEvents, setSafetyEvents] = useState<SafetyEventRow[]>([]);
+  const [ackNotes, setAckNotes] = useState<Record<string, string>>({});
+  const [ackingId, setAckingId] = useState<string | null>(null);
+  const [safetyMsg, setSafetyMsg] = useState<{ text: string; isError: boolean } | null>(null);
 
   // ── Audio tab ──
   const [audioMissing, setAudioMissing] = useState(0);
@@ -72,6 +79,7 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
+    if (activeTab === 'safety') loadSafetyEvents();
     if (activeTab === 'users') loadUsers();
     if (activeTab === 'audio') checkMissingAudio();
     if (activeTab === 'backend') loadHealth();
@@ -100,6 +108,38 @@ export default function AdminDashboard() {
       setUsersTotal(res.total);
       setUsersTotalPages(res.totalPages);
     } catch { /* ignore */ }
+  };
+
+  const loadSafetyEvents = async () => {
+    try {
+      setSafetyEvents(await adminApi.getSafetyEvents('open'));
+    } catch { /* ignore */ }
+  };
+
+  const handleAcknowledge = async (event: SafetyEventRow) => {
+    const note = (ackNotes[event.id] || '').trim();
+    if (!note) {
+      setSafetyMsg({ text: 'Add a note describing the clinical follow-up before acknowledging.', isError: true });
+      return;
+    }
+    setAckingId(event.id);
+    setSafetyMsg(null);
+    try {
+      const res = await adminApi.acknowledgeSafetyEvent(event.id, note);
+      setSafetyMsg({
+        text: res.patientStillLocked
+          ? `Acknowledged ${event.triggerCode}. ${event.displayUserId} still has other open events and stays locked.`
+          : `Acknowledged ${event.triggerCode}. Coaching is unlocked for ${event.displayUserId}.`,
+        isError: false,
+      });
+      setAckNotes(prev => { const next = { ...prev }; delete next[event.id]; return next; });
+      loadSafetyEvents();
+      loadOverview();
+    } catch (e) {
+      setSafetyMsg({ text: e instanceof Error ? e.message : 'Acknowledge failed', isError: true });
+    } finally {
+      setAckingId(null);
+    }
   };
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -381,6 +421,41 @@ export default function AdminDashboard() {
             </div>
           )}
 
+          {activeTab === 'safety' && (
+            <div className="admin-tab-content">
+              <h1 className="admin-tab-title"><Shield size={20} /> Safety Events</h1>
+              <div className="admin-scard">
+                <h3 className="admin-scard-title"><AlertTriangle size={18} /> Open events ({safetyEvents.length})</h3>
+                <p className="admin-audio-status">
+                  Each patient below is locked out of all coaching and sees only the emergency script.
+                  Acknowledging an event after clinical follow-up is the only way to unlock them.
+                </p>
+                {safetyMsg && <p className={`admin-msg ${safetyMsg.isError ? 'admin-msg-error' : 'admin-msg-info'}`}>{safetyMsg.text}</p>}
+                {safetyEvents.length === 0 && <p className="admin-audio-status">No open safety events.</p>}
+                {safetyEvents.map(e => (
+                  <div key={e.id} style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 0', borderTop: '1px solid var(--border)' }}>
+                    <div className="admin-detail-row">
+                      <span><strong>{e.triggerCode}</strong> · {e.firstName} {e.lastName} ({e.displayUserId})</span>
+                      <span>Module {e.sourceModule} · {new Date(e.triggeredAt).toLocaleString()}</span>
+                    </div>
+                    <input
+                      className="form-input"
+                      placeholder="Acknowledgement note (required), e.g. called patient, seen at clinic"
+                      maxLength={1000}
+                      value={ackNotes[e.id] || ''}
+                      onChange={ev => setAckNotes(prev => ({ ...prev, [e.id]: ev.target.value }))}
+                    />
+                    <div className="admin-audio-actions">
+                      <button className="admin-action-btn" disabled={ackingId === e.id} onClick={() => handleAcknowledge(e)}>
+                        {ackingId === e.id ? 'Acknowledging...' : 'Acknowledge & unlock'}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {activeTab === 'notifications' && (
             <div className="admin-tab-content">
               <h1 className="admin-tab-title"><Bell size={20} /> Notifications</h1>
@@ -522,7 +597,7 @@ export default function AdminDashboard() {
                   <div>
                     <h3 className="admin-scard-title">Safety Events ({detailData.safetyEvents.length})</h3>
                     {detailData.safetyEvents.slice(0, 8).map((e: any) => (
-                      <div key={e.id} className="admin-detail-row"><span>{e.triggerCode}</span><span>{e.resolved ? 'resolved' : 'open'}</span></div>
+                      <div key={e.id} className="admin-detail-row"><span>{e.triggerCode}</span><span>{e.status}{e.acknowledgedAt ? ` (${new Date(e.acknowledgedAt).toLocaleDateString()}: ${e.acknowledgementNote})` : ''}</span></div>
                     ))}
                   </div>
                 </>

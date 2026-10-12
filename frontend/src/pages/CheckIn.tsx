@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserStore } from '../stores/useUserStore';
 import { translations } from '../data/translations';
-import api from '../services/api/client';
+import api, { SafetyLockError } from '../services/api/client';
 import AppBar from '../components/common/AppBar';
 import BottomNav from '../components/common/BottomNav';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -99,8 +99,10 @@ export default function CheckIn() {
       } else {
         markLatestActionCompleted(user.id, 'checkin');
       }
-    } catch {
-      setResult('positive');
+    } catch (e) {
+      // 423: answers were saved and screened, but coaching is locked --
+      // SafetyLockGate takes over the screen. Never show "positive" for it.
+      setResult(e instanceof SafetyLockError ? 'escalated' : 'positive');
     } finally {
       setSubmitting(false);
     }

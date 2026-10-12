@@ -14,6 +14,7 @@ import CheckIn from './pages/CheckIn'
 import Settings from './pages/Settings'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
+import SafetyLockGate from './components/safety/SafetyLockGate'
 
 function App() {
   const { loadFromLocal, isLoading, isRegistered, language } = useUserStore()
@@ -37,21 +38,23 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={isRegistered ? <Navigate to="/home" /> : <FirstLandingPage />} />
-        <Route path="/recover" element={<RecoverProfilePage />} />
-        <Route path="/home" element={isRegistered ? <Home /> : <Navigate to="/" />} />
-        <Route path="/conversation/:sitting" element={isRegistered ? <Conversation /> : <Navigate to="/" />} />
-        <Route path="/care-plan/:id" element={isRegistered ? <CarePlan /> : <Navigate to="/" />} />
-        <Route path="/history" element={isRegistered ? <History /> : <Navigate to="/" />} />
-        <Route path="/sugar" element={isRegistered ? <SugarTracking /> : <Navigate to="/" />} />
-        <Route path="/activity" element={isRegistered ? <ActivityProgress /> : <Navigate to="/" />} />
-        <Route path="/check-in" element={isRegistered ? <CheckIn /> : <Navigate to="/" />} />
-        <Route path="/settings" element={isRegistered ? <Settings /> : <Navigate to="/" />} />
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <SafetyLockGate>
+        <Routes>
+          <Route path="/" element={isRegistered ? <Navigate to="/home" /> : <FirstLandingPage />} />
+          <Route path="/recover" element={<RecoverProfilePage />} />
+          <Route path="/home" element={isRegistered ? <Home /> : <Navigate to="/" />} />
+          <Route path="/conversation/:sitting" element={isRegistered ? <Conversation /> : <Navigate to="/" />} />
+          <Route path="/care-plan/:id" element={isRegistered ? <CarePlan /> : <Navigate to="/" />} />
+          <Route path="/history" element={isRegistered ? <History /> : <Navigate to="/" />} />
+          <Route path="/sugar" element={isRegistered ? <SugarTracking /> : <Navigate to="/" />} />
+          <Route path="/activity" element={isRegistered ? <ActivityProgress /> : <Navigate to="/" />} />
+          <Route path="/check-in" element={isRegistered ? <CheckIn /> : <Navigate to="/" />} />
+          <Route path="/settings" element={isRegistered ? <Settings /> : <Navigate to="/" />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </SafetyLockGate>
     </BrowserRouter>
   )
 }

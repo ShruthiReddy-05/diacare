@@ -23,12 +23,15 @@ from models.care_plan import CarePlan
 from models.temporary_audio import TemporaryAudio
 from schemas.care_plan import CarePlanResponse
 from services.care_plan_generator import generate_care_plan
+from services.safety_lock import require_no_open_safety_event
 from routers.conversation import build_user_answers, _baseline_to_dict
 from config import settings
 from utils import ist_now
 
-router = APIRouter(prefix="/api/care-plan", tags=["Care Plan"])
-temp_audio_router = APIRouter(prefix="/api/temporary-audio", tags=["Temporary Audio"])
+# Every care-plan route (and its spoken audio) is coaching content, so the
+# Module D lock applies router-wide -- including any route added later.
+router = APIRouter(prefix="/api/care-plan", tags=["Care Plan"], dependencies=[Depends(require_no_open_safety_event)])
+temp_audio_router = APIRouter(prefix="/api/temporary-audio", tags=["Temporary Audio"], dependencies=[Depends(require_no_open_safety_event)])
 
 
 @router.post("/generate", response_model=CarePlanResponse, status_code=status.HTTP_201_CREATED)

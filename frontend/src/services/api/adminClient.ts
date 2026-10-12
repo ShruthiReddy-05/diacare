@@ -52,6 +52,22 @@ export interface OverviewMetrics {
   reassessmentsTriggered: number;
 }
 
+export interface SafetyEventRow {
+  id: string;
+  userId: string;
+  displayUserId?: string;
+  firstName?: string;
+  lastName?: string;
+  triggerCode: string;
+  sourceModule: string;
+  status: 'open' | 'acknowledged';
+  resolved: boolean;
+  triggeredAt: string;
+  acknowledgedAt: string | null;
+  acknowledgedBy: string | null;
+  acknowledgementNote: string | null;
+}
+
 export interface HealthInfo {
   status: string;
   timestamp: string;
@@ -193,6 +209,16 @@ export const adminApi = {
   cleanupTemporaryAudio: () =>
     adminRequest<{ deleted: number; message: string }>('/api/admin/temporary-audio/cleanup', {
       method: 'POST',
+    }),
+
+  getSafetyEvents: (status: 'open' | 'acknowledged' | 'all' = 'open') =>
+    adminRequest<SafetyEventRow[]>(`/api/admin/safety-events?status=${status}`),
+
+  // The only way a patient's coaching lock is lifted.
+  acknowledgeSafetyEvent: (eventId: string, note: string) =>
+    adminRequest<SafetyEventRow & { patientStillLocked: boolean }>(`/api/admin/safety-events/${eventId}/acknowledge`, {
+      method: 'POST',
+      body: JSON.stringify({ note }),
     }),
 
   changePassword: (currentPassword: string, newPassword: string) =>

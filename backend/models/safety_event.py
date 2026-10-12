@@ -4,12 +4,19 @@ from sqlalchemy.orm import relationship
 from database import Base
 from utils import ist_now
 
+SAFETY_STATUS_OPEN = "open"
+SAFETY_STATUS_ACKNOWLEDGED = "acknowledged"
+
 
 class SafetyEvent(Base):
     """Audit trail for module D (continuous safety monitoring). Created by
     services/safety_engine.py whenever a red-flag value or keyword is
     detected in any module or check-in answer. The rule engine, not the
-    language model, decides every escalation."""
+    language model, decides every escalation.
+
+    While any event for a patient is "open", every coaching endpoint returns
+    HTTP 423 (see services/safety_lock.py). Only a clinician acknowledging the
+    event from the admin dashboard moves it to "acknowledged"."""
     __tablename__ = "safety_events"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -19,8 +26,11 @@ class SafetyEvent(Base):
     trigger_code = Column(String(50), nullable=False)  # e.g. "chest_pain", "sugar_below_70", "foot_blackening"
     trigger_detail = Column(String(500), nullable=True)
     triggered_at = Column(DateTime, default=ist_now, nullable=False)
+    status = Column(String(20), default=SAFETY_STATUS_OPEN, nullable=False, index=True)  # "open" -> "acknowledged"
     acknowledged_at = Column(DateTime, nullable=True)
+    acknowledged_by = Column(String(36), ForeignKey("admin_users.id", ondelete="SET NULL"), nullable=True)
+    acknowledgement_note = Column(String(1000), nullable=True)
     escalation_script_delivered = Column(Boolean, default=False, nullable=False)
-    resolved = Column(Boolean, default=False, nullable=False)
+    resolved = Column(Boolean, default=False, nullable=False)  # kept in sync with status for older queries/exports
 
     user = relationship("User", back_populates="safety_events")

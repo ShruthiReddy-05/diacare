@@ -7,8 +7,10 @@ from typing import List
 from database import get_db
 from models.checkin import WeeklyDomainMetric
 from schemas.checkin import WeeklyDomainMetricResponse
+from services.safety_lock import require_no_open_safety_event
 
-router = APIRouter(prefix="/api/adherence", tags=["Adherence"])
+# Check-in progression (streaks, poor weeks, reassessment) -- locked by Module D.
+router = APIRouter(prefix="/api/adherence", tags=["Adherence"], dependencies=[Depends(require_no_open_safety_event)])
 
 @router.get("/user/{user_id}/current", response_model=WeeklyDomainMetricResponse)
 async def get_current_adherence(user_id: str, db: AsyncSession = Depends(get_db)):

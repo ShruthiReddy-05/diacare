@@ -11,7 +11,7 @@ from config import settings
 from utils import ist_now
 import models
 
-from routers import users, conversation, care_plan, sugar_and_activity, audio, admin, checkin, notifications, reminders, scheduler, adherence, speech
+from routers import users, conversation, care_plan, sugar_and_activity, audio, admin, checkin, notifications, reminders, scheduler, adherence, speech, safety
 from routers.care_plan import temp_audio_router
 
 logger = logging.getLogger(__name__)
@@ -93,6 +93,7 @@ app.include_router(reminders.router)
 app.include_router(scheduler.router)
 app.include_router(adherence.router)
 app.include_router(speech.router)
+app.include_router(safety.router)
 app.include_router(temp_audio_router)
 
 @app.get("/")

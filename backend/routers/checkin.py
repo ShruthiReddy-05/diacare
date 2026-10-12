@@ -14,6 +14,7 @@ from schemas.checkin import (
 from services import checkin_engine, safety_engine
 from services.adherence_tracker import update_weekly_domain_metric, get_latest_metric
 from services.checkin_scheduler import create_checkin_schedule
+from services.safety_lock import require_no_open_safety_event, raise_if_locked
 from utils import ist_now
 
 router = APIRouter(prefix="/api/checkin", tags=["Check-In"])
@@ -73,11 +74,16 @@ async def complete_checkin(session_id: str, body: CheckInSessionComplete, db: As
 
     await db.commit()
     await update_weekly_domain_metric(session.user_id, session.program_week, evaluation, db)
+
+    # Answers are always saved and screened above; the coaching content in the
+    # response is withheld while any Module D event is open (new or earlier).
+    await raise_if_locked(session.user_id, db)
+
     await db.refresh(session)
     return session
 
 
-@router.get("/user/{user_id}/sessions", response_model=List[CheckInSessionResponse])
+@router.get("/user/{user_id}/sessions", response_model=List[CheckInSessionResponse], dependencies=[Depends(require_no_open_safety_event)])
 async def get_user_checkin_sessions(user_id: str, db: AsyncSession = Depends(get_db)):
     stmt = select(CheckInSession).where(CheckInSession.user_id == user_id).order_by(desc(CheckInSession.due_date))
     return (await db.execute(stmt)).scalars().all()

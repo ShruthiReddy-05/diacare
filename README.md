@@ -47,7 +47,7 @@ Patient Browser (React PWA)
 | **M3** | Taking Medication & Monitoring | Adherence, missed-dose barrier, target knowledge | Target numbers graded against real ICMR ranges (not self-reported) |
 | **M4** | Healthy Coping & Problem Solving | Hypo symptoms, sleep, mood screen | 15-15 hypoglycaemia protocol, 2-item mood screen (no diagnosis made) |
 | **C** | Weekly Check-In | 8 items, repeated for 12 weeks | Per-domain progression/regression; 2 consecutive poor weeks trigger reassessment |
-| **D** | Safety Monitoring | Runs continuously across every module | Red-flag detection halts coaching and shows an emergency script until acknowledged |
+| **D** | Safety Monitoring | Runs continuously across every module | Red-flag detection opens a safety event; the server answers every coaching endpoint with HTTP 423 + the fixed emergency script until a clinician acknowledges it on the dashboard |
 
 Full question list, decision rules, and worked example: see the conversation history in this repo's project notes, or the ICMR/AADE7-anchored spec this build follows.
 
@@ -141,8 +141,10 @@ npm run dev      # http://localhost:5173, proxies /api to http://localhost:8000
 ```powershell
 cd backend
 .\.venv\Scripts\Activate.ps1
-pytest tests/test_decision_engine.py -v
+pytest -v
 ```
+
+`tests/test_safety_lock.py` covers the server-side Module D lock end to end (API + an isolated SQLite DB per test).
 
 All decision-engine logic (BMI/risk classification, glycaemic bands, activity ramps, barrier classification, target-knowledge grading, check-in progression, safety triggers) is covered by unit tests independent of the API/database layer.
 
@@ -151,6 +153,7 @@ All decision-engine logic (BMI/risk classification, glycaemic bands, activity ra
 - **Backend + Postgres**: `render.yaml` defines a Render Blueprint — push to GitHub, then "New → Blueprint" on Render pointed at this repo provisions both automatically.
 - **Frontend**: `netlify.toml` configures the build (`npm run build`, publish `frontend/dist`) and the SPA redirect. Set `VITE_API_URL` in Netlify's environment variables to the Render backend's URL.
 - **Weekly check-in scheduler**: `.github/workflows/daily-checkin-tick.yml` runs daily and calls `POST /api/scheduler/daily-tick`, which advances the 12-week check-in cadence and sends due reminders. Render's free tier has no built-in cron, so this workflow is what actually drives it — without it, check-ins never fire.
+- **Safety-event migration** (once, on any database created before the coaching lock): `python scripts/migrate_add_safety_event_status.py` adds `status`, `acknowledged_by` and `acknowledgement_note` to `safety_events`. Every existing unresolved event becomes `open` and locks that patient until acknowledged — review the dashboard's Safety Events tab right after running it.
 - **Seeding the admin account** (once, after first deploy): `POST /api/admin/seed` creates `admin` / `diafit2024`. Change the password immediately via the Admin Dashboard's Backend tab → Change Password.
 
 ## Admin dashboard
@@ -158,6 +161,7 @@ All decision-engine logic (BMI/risk classification, glycaemic bands, activity ra
 Available at `/admin` (login) → `/admin/dashboard`. Provides:
 
 - Overview metrics (users, risk-tier distribution, open safety events, check-in completion)
+- Safety Events queue: every open Module D event, with a required note to **acknowledge & unlock** the patient
 - User list/detail with baseline profile, care plans, check-ins, safety events
 - CSV export of all assessment responses and all weekly check-ins (admin sees every user, since all data lives in one shared Postgres instance)
 - Audio-asset generation status, manual backup trigger, temporary-audio cleanup
@@ -169,7 +173,6 @@ Available at `/admin` (login) → `/admin/dashboard`. Provides:
 - Foot-risk classification currently produces three reachable tiers where the source guideline implies four.
 - Activity guidance gives one generic "medical clearance" note rather than differentiating retinopathy- and cardiac-specific restrictions.
 - Recurrent hypoglycaemia episodes are not yet auto-escalated across check-ins.
-- Safety events are logged and coaching is meant to halt, but there is no server-side enforced gate yet blocking further module access until a safety event is acknowledged.
 - Personalization is entirely rule-based; there is no machine-learning component.
 
 ## Clinical references

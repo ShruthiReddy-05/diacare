@@ -20,7 +20,8 @@ from models.user import User, AppSession
 from models.conversation import ConversationSession, ConversationResponse
 from models.baseline_profile import BaselineProfile
 from models.care_plan import CarePlan
-from models.safety_event import SafetyEvent
+from models.safety_event import SafetyEvent, SAFETY_STATUS_OPEN, SAFETY_STATUS_ACKNOWLEDGED
+from schemas.safety_event import SafetyEventAcknowledge
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/admin", tags=["Admin Dashboard"])
@@ -171,7 +172,7 @@ async def get_overview_metrics(
     )).scalar() or 0
 
     open_safety_events = (await db.execute(
-        select(func.count(SafetyEvent.id)).where(SafetyEvent.resolved == False)
+        select(func.count(SafetyEvent.id)).where(SafetyEvent.status == SAFETY_STATUS_OPEN)
     )).scalar() or 0
 
     reassessments_triggered = (await db.execute(
@@ -279,8 +280,66 @@ async def get_user_detail(user_id: str, db: AsyncSession = Depends(get_db), admi
         } if baseline else None,
         "carePlans": [{"id": p.id, "riskTier": p.risk_tier, "createdAt": p.created_at} for p in care_plans],
         "checkinSessions": [{"id": c.id, "programWeek": c.program_week, "status": c.status, "dueDate": c.due_date} for c in checkins],
-        "safetyEvents": [{"id": e.id, "triggerCode": e.trigger_code, "resolved": e.resolved, "triggeredAt": e.triggered_at} for e in safety_events],
+        "safetyEvents": [_safety_event_row(e) for e in safety_events],
     }
+
+
+def _safety_event_row(e: SafetyEvent, user: Optional[User] = None, acknowledger: Optional[AdminUser] = None) -> dict:
+    row = {
+        "id": e.id, "userId": e.user_id, "triggerCode": e.trigger_code, "sourceModule": e.source_module,
+        "status": e.status, "resolved": e.resolved, "triggeredAt": e.triggered_at,
+        "acknowledgedAt": e.acknowledged_at, "acknowledgedBy": e.acknowledged_by,
+        "acknowledgementNote": e.acknowledgement_note,
+    }
+    if user is not None:
+        row.update({"displayUserId": user.display_user_id, "firstName": user.first_name, "lastName": user.last_name})
+    if acknowledger is not None:
+        row["acknowledgedByName"] = acknowledger.display_name
+    return row
+
+
+@router.get("/safety-events")
+async def list_safety_events(
+    db: AsyncSession = Depends(get_db),
+    admin: AdminUser = Depends(get_current_admin),
+    status_filter: str = Query(SAFETY_STATUS_OPEN, alias="status"),
+):
+    """Dashboard queue of Module D events; default is the open (locking) ones."""
+    stmt = select(SafetyEvent, User).join(User, User.id == SafetyEvent.user_id).order_by(SafetyEvent.triggered_at.desc())
+    if status_filter != "all":
+        stmt = stmt.where(SafetyEvent.status == status_filter)
+    rows = (await db.execute(stmt.limit(200))).all()
+    return [_safety_event_row(e, u) for e, u in rows]
+
+
+@router.post("/safety-events/{event_id}/acknowledge")
+async def acknowledge_safety_event(
+    event_id: str,
+    body: SafetyEventAcknowledge,
+    db: AsyncSession = Depends(get_db),
+    admin: AdminUser = Depends(get_current_admin),
+):
+    """The only way to lift a Module D coaching lock. Requires an admin
+    (clinician) session token -- patients have no route to this."""
+    event = (await db.execute(select(SafetyEvent).where(SafetyEvent.id == event_id))).scalar()
+    if not event:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Safety event not found")
+    if event.status != SAFETY_STATUS_OPEN:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Safety event already acknowledged")
+
+    event.status = SAFETY_STATUS_ACKNOWLEDGED
+    event.resolved = True
+    event.acknowledged_at = ist_now()
+    event.acknowledged_by = admin.id
+    event.acknowledgement_note = body.note
+    await db.commit()
+    await db.refresh(event)
+    _metrics_cache.pop("overview", None)
+
+    remaining_open = (await db.execute(
+        select(func.count(SafetyEvent.id)).where(SafetyEvent.user_id == event.user_id, SafetyEvent.status == SAFETY_STATUS_OPEN)
+    )).scalar() or 0
+    return {**_safety_event_row(event, acknowledger=admin), "patientStillLocked": remaining_open > 0}
 
 
 @router.get("/export/responses")

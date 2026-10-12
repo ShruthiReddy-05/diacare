@@ -1,6 +1,18 @@
+import { useSafetyLockStore, type SafetyLock } from "../../stores/useSafetyLockStore";
+
 // In local dev this stays "" and vite.config.ts's proxy forwards /api to localhost:8000.
 // In production, set VITE_API_URL to the deployed backend's origin (e.g. https://diacare-api.onrender.com).
 const API_BASE = import.meta.env.VITE_API_URL || "";
+
+// HTTP 423: the server has an open Module D safety event for this patient and
+// is withholding coaching. The body carries the fixed emergency script.
+export class SafetyLockError extends Error {
+  lock: SafetyLock;
+  constructor(lock: SafetyLock) {
+    super("safety_lock");
+    this.lock = lock;
+  }
+}
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const headers = {
@@ -12,6 +24,13 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
     ...options,
     headers
   });
+
+  if (response.status === 423) {
+    const body = await response.json().catch(() => null);
+    const lock: SafetyLock = { ...(body?.detail || {}), locked: true };
+    useSafetyLockStore.getState().setLock(lock);
+    throw new SafetyLockError(lock);
+  }
 
   if (!response.ok) {
     let errorDetail = "API Request failed";
@@ -172,6 +191,10 @@ export const api = {
 
   getUserActivityLogs: (userId: string) =>
     request<any[]>(`/api/tracking/activity/user/${userId}`),
+
+  // Safety (Module D) -- always reachable, even while coaching is locked
+  getSafetyStatus: (userId: string) =>
+    request<SafetyLock>(`/api/safety/user/${userId}/status`),
 
   // Admin
   getAdminMetrics: () => request<any>("/api/admin/metrics/overview"),
