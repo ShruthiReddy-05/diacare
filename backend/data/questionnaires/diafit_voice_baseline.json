@@ -100,7 +100,7 @@
         { "id": "skips_meals", "input_type": "confirmation", "save_as": "skipsMeals", "prompt": { "en": "Do you skip any meals?", "ta": "நீங்கள் எந்த வேளை உணவையும் தவிர்ப்பதுண்டா?" } },
         { "id": "rice_cups", "input_type": "decimal", "save_as": "riceCupsPerMeal", "prompt": { "en": "How many cups of rice do you take at one meal?", "ta": "ஒரு வேளையில் எத்தனை கப் சாதம் சாப்பிடுவீர்கள்?" } },
         { "id": "millets", "input_type": "confirmation", "save_as": "eatsMilletsWholeWheat", "prompt": { "en": "Do you eat millets or whole wheat?", "ta": "நீங்கள் சிறுதானியங்கள் அல்லது கோதுமை உணவுகள் சாப்பிடுவீர்களா?" } },
-        { "id": "fried_sweets", "input_type": "number", "save_as": "friedSweetFrequencyPerWeek", "prompt": { "en": "How often do you eat fried snacks, sweets or bakery items in a week?", "ta": "வாரத்திற்கு எத்தனை முறை வறுத்த பலகாரங்கள், இனிப்புகள் அல்லது பேக்கரி பொருட்கள் சாப்பிடுவீர்கள்?" } },
+        { "id": "fried_sweets", "input_type": "number", "save_as": "friedSweetFrequencyPerWeek", "prompt": { "en": "How many times a week do you eat fried snacks, sweets or bakery items?", "ta": "வாரத்திற்கு எத்தனை முறை வறுத்த பலகாரங்கள், இனிப்புகள் அல்லது பேக்கரி பொருட்கள் சாப்பிடுவீர்கள்?" } },
         { "id": "vegetables", "input_type": "number", "save_as": "vegetablePortionsPerDay", "prompt": { "en": "How many portions of vegetables do you eat in a day?", "ta": "ஒரு நாளில் எத்தனை பங்கு காய்கறிகள் சாப்பிடுவீர்கள்?" } },
         { "id": "extra_salt", "input_type": "confirmation", "save_as": "addsExtraSalt", "prompt": { "en": "Do you add extra salt at the table?", "ta": "சாப்பிடும்போது கூடுதலாக உப்பு சேர்ப்பீர்களா?" } },
         { "id": "pickles_packaged", "input_type": "confirmation", "save_as": "eatsPicklesOrPackagedSnacksOften", "prompt": { "en": "Do you eat pickles or packaged snacks most days?", "ta": "பெரும்பாலான நாட்களில் ஊறுகாய் அல்லது பொதி செய்யப்பட்ட தின்பண்டங்கள் சாப்பிடுவீர்களா?" } }
@@ -130,7 +130,15 @@
             { "value": "other", "label": { "en": "Something else", "ta": "வேறு காரணம்" } }
           ],
           "prompt": { "en": "What is the main reason you missed a dose?", "ta": "மருந்து தவறவிட்டதற்கான முக்கிய காரணம் என்ன?" } },
-        { "id": "sugar_check_frequency", "input_type": "text", "save_as": "sugarCheckFrequency", "prompt": { "en": "How often do you check your sugar?", "ta": "எவ்வளவு அடிக்கடி உங்கள் சர்க்கரை அளவைச் சோதிப்பீர்கள்?" } },
+        { "id": "sugar_check_frequency", "input_type": "single_choice", "save_as": "sugarCheckFrequency",
+          "options": [
+            { "value": "daily", "label": { "en": "Every day", "ta": "தினமும்" } },
+            { "value": "few_times_week", "label": { "en": "A few times a week", "ta": "வாரத்தில் சில முறை" } },
+            { "value": "weekly", "label": { "en": "Once a week", "ta": "வாரத்திற்கு ஒரு முறை" } },
+            { "value": "monthly", "label": { "en": "Once a month", "ta": "மாதத்திற்கு ஒரு முறை" } },
+            { "value": "rarely", "label": { "en": "Less often, or never", "ta": "அதைவிட குறைவாக, அல்லது சோதிப்பதே இல்லை" } }
+          ],
+          "prompt": { "en": "How often do you check your blood sugar - every day, a few times a week, once a week, once a month, or less often?", "ta": "உங்கள் இரத்த சர்க்கரை அளவை எவ்வளவு அடிக்கடி சோதிப்பீர்கள் - தினமும், வாரத்தில் சில முறை, வாரத்திற்கு ஒரு முறை, மாதத்திற்கு ஒரு முறை, அல்லது அதைவிட குறைவாக?" } },
         { "id": "target_knowledge", "input_type": "blood_sugar_target", "save_as": "statedTargetFasting,statedTargetPostMeal", "prompt": { "en": "What should your target fasting and post-meal blood glucose numbers be? (e.g. 100/130)", "ta": "உங்கள் இலக்கு வெறும் வயிறு மற்றும் உணவுக்குப் பிறகான இரத்த சர்க்கரை அளவுகள் என்னவாக இருக்க வேண்டும்? (எ.கா. 100/130)" } }
       ]
     },
@@ -141,7 +149,7 @@
       "questions": [
         { "id": "hypo_symptoms", "input_type": "confirmation", "save_as": "hasHypoSymptoms", "prompt": { "en": "Have you had episodes of shaking, sweating, giddiness or sudden hunger?", "ta": "உங்களுக்கு நடுக்கம், வியர்வை, தலைச்சுற்றல் அல்லது திடீர் பசி ஏற்பட்டதுண்டா?" } },
         { "id": "sleep_hours", "input_type": "decimal", "save_as": "sleepHours", "prompt": { "en": "How many hours do you sleep at night?", "ta": "இரவில் எத்தனை மணி நேரம் தூங்குவீர்கள்?" } },
-        { "id": "snores_loudly", "input_type": "confirmation", "save_as": "snoresLoudly", "prompt": { "en": "Do you snore loudly or feel sleepy during the day?", "ta": "நீங்கள் உரக்க குறட்டை விடுவீர்களா அல்லது பகலில் தூக்கம் வருமா?" } },
+        { "id": "snores_loudly", "input_type": "confirmation", "save_as": "snoresLoudly", "prompt": { "en": "Do you snore loudly?", "ta": "நீங்கள் உரக்க குறட்டை விடுவீர்களா?" } },
         { "id": "daytime_sleepy", "input_type": "confirmation", "save_as": "daytimeSleepy", "prompt": { "en": "Do you feel sleepy during the day?", "ta": "பகல் நேரத்தில் தூக்கம் கவ்வுமா?" } },
         { "id": "mood_low_interest", "input_type": "confirmation", "save_as": "feltLowOrLostInterest", "prompt": { "en": "In the last two weeks, have you often felt low, or lost interest in things?", "ta": "கடந்த இரண்டு வாரங்களில், அடிக்கடி மனம் தளர்ச்சியாக இருந்ததா அல்லது எதிலும் ஆர்வம் இல்லாமல் இருந்ததா?" } },
         { "id": "mood_worried_guilty", "input_type": "confirmation", "save_as": "feltWorriedGuiltyTired", "prompt": { "en": "Do you feel worried, guilty or tired of managing your diabetes?", "ta": "உங்கள் நீரிழிவை நிர்வகிப்பதில் கவலையாகவோ, குற்ற உணர்வுடனோ அல்லது சோர்வாகவோ உணர்கிறீர்களா?" } }
